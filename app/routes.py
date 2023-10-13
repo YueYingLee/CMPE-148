@@ -1,21 +1,23 @@
 from flask import render_template
 from flask import redirect, request, session, url_for
 from flask import flash, get_flashed_messages
-from app import myapp_obj, db, socketio
+from app import myapp_obj, db
 from flask_login import current_user
 from flask_login import login_user
 from flask_login import logout_user
 from flask_login import login_required
-from flask_socketio import join_room, leave_room, emit
+from flask_socketio import join_room, leave_room, send, SocketIO
 from datetime import datetime
-from app.send_emails import sendEmails
-from app.register import registerUser 
-from app.models import User, Emails, Todo, Profile, ChatRoom, Note
-from app.login import LoginForm
-from app.notes import NoteForm
-from app.todo import TodoForm
-from app.profile import BioForm, PasswordForm, DeleteForm
-from app.chat import CreateRoomForm, JoinRoomForm
+from app.models import User
+
+#from app.send_emails import sendEmails
+#from app.register import registerUser 
+
+#from app.login import LoginForm
+#from app.notes import NoteForm
+#from app.todo import TodoForm
+#rom app.profile import BioForm, PasswordForm, DeleteForm
+#from app.chat import CreateRoomForm, JoinRoomForm
 from sqlalchemy import desc
 
 
