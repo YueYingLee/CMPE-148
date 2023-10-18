@@ -55,7 +55,7 @@ def register():
         if registerForm.validate_on_submit():
           same_Username = User.query.filter_by(username = registerForm.username.data).first()
           if same_Username == None:
-            user = User(fullname = registerForm.fullname.data, username= registerForm.username.data)
+            user = User(username= registerForm.username.data)
             user.set_password(registerForm.password.data)
             db.session.add(user)
             db.session.commit()
