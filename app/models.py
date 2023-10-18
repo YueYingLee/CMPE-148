@@ -15,7 +15,7 @@ password_hash -> user entered password stored as hash
 """
 class User(db.Model, UserMixin):
     user_id=db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(30), nullable=False, unique=True)
+    username = db.Column(db.String(30), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
