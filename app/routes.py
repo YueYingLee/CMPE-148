@@ -9,13 +9,14 @@ from flask_login import login_required
 from flask_socketio import join_room, leave_room, send, SocketIO
 from datetime import datetime
 from app.models import User
-
+from app.register import registerUser
+from app.login import LoginForm
 from sqlalchemy import desc
 
 
 @myapp_obj.route("/")
 def index():
-    return render_template('index.html' )
+    return render_template('login.html' )
 
 
 @myapp_obj.route("/homepage")
@@ -23,7 +24,7 @@ def index():
 def homepage():
     user = current_user
     user_fullname = user.username
-    return render_template('homepage.html', user_fullname = user_fullname)
+    return render_template('home.html', user_fullname = user_fullname)
 
 
 @myapp_obj.route("/login", methods=['GET', 'POST'])
@@ -32,7 +33,8 @@ def login():
     if form.validate_on_submit():
         valid_user = User.query.filter_by(username = form.name.data).first()
         if valid_user != None:
-          if valid_user.check_password(form.password.data)== True:
+          if valid_user.check_password(form.password.data) == True:
+             
              login_user(valid_user)
              return redirect(url_for('homepage'))
           else :
@@ -55,8 +57,10 @@ def register():
         if registerForm.validate_on_submit():
           same_Username = User.query.filter_by(username = registerForm.username.data).first()
           if same_Username == None:
-            user = User(username= registerForm.username.data)
+            user = User()
+            user.username = registerForm.username.data
             user.set_password(registerForm.password.data)
+            
             db.session.add(user)
             db.session.commit()
             return redirect('/login')

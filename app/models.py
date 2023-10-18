@@ -19,17 +19,16 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        print("self.password is: ")
-        print(self.password)
-        print("input password is: ")
-        print(password)
-        return check_password_hash(self.password, password)
+        return check_password_hash(self.password_hash, password)
 
+    def get_id(self):
+        return str(self.user_id)
+    
     def __repr__(self): #for debugging process
-        return f'<user {self.id}: {self.name}>'
+        return f'<user {self.user_id}: {self.username}>'
 
 """
 Conversation relations
