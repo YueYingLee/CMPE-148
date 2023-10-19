@@ -43,7 +43,7 @@ class Conversations(db.Model):
     conv_id = db.Column(db.Integer, primary_key=True)
     participants = db.Column(db.String)
     def __repr__(self): #for debugging process
-        return f'<Conversations {self.id}: >'
+        return f'<Conversations {self.conv_id}, {self.participants}: >'
 
 """
 Messages relation 
@@ -61,7 +61,7 @@ class Messages(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.timezone.utc)
     msg_content = db.Column(db.String(1024))
     def __repr__(self): #for debugging process
-        return f'<Messages {self.id}:>'
+        return f'<Messages {self.msg_content}:>'
 
 @login.user_loader
 def load_user(id):

@@ -1,21 +1,35 @@
 {% extends 'base.html' %} {% block content %}
 <div id="home-container">
-  <h1 id="home-header">Flask Chat 💬</h1>
+  <h1 id="home-header">Flask Chat 💬. Hello, {{user.username}}</h1>
   {% if error %}
   <p id="error">{{error}}</p>
   {% endif %}
-  <form method="post" id="chat-widget-home">
-    <div id="name-input">
-      <label for="name">Enter your name</label>
-      <input type="text" id="name" name="name" placeholder="Enter name" value="{{name}}" />
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+      <ul class="list-unstyled">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
     </div>
-    <div>
-      <label for="code" id="code-label">Enter chat room code</label>
-      <input type="text" id="code" name="code" placeholder="Enter code" value="{{code}}" />
-      <button type="submit" id="join" name="join">Join</button>
+    {% endif %}
+    {% endwith %}
+
+  <form action="" method="POST" novalidate class="login-form">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      <label for="name" class="form-label"> Search for User</label>
+      {{ form.name(size=30, id="username", class="form-control rounded-pill") }}
+      {% for error in form.name.errors %}
+      <span class="text-danger">[{{ error }}]</span>
+      {% endfor %}
     </div>
-    <hr />
-    <button type="submit" id="create" name="create">Create Room</button>
+
+    <div class="form-group">
+      {{ form.submit(class="btn btn-primary rounded-pill") }}
+    </div>
   </form>
 </div>
 {% endblock %}

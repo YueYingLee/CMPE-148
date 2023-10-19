@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block content %}
+<div id="home-container">
+  <h1 id="home-header">Flask Chat 💬. Conversation</h1>
+  {% if error %}
+  <p id="error">{{error}}</p>
+  {% endif %}
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+      <ul class="list-unstyled">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div id="room-container">
+      <div id="room-subsection">
+      </div>
+      <div id="chat-room-widget">
+        <div id="msgs-container">
+          <ul id="messages"></ul>
+        </div>
+        <div id="message-box">
+          <input type="text" placeholder="Enter your message" id="message-input" name="message" />
+          <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        var socketio = io();
+        //anon function in javascript
+        //"hears" message event fron the backend
+        
+       
+    
+        function sendMessage() {
+          //getting message input
+          var msgInput = document.getElementById("message-input");
+          //no input
+          if (msgInput.value === "") return;
+          //get the message, then "emit" a message event for the backend 
+          var msg = msgInput.value;
+          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}"});
+          msgInput.value = "";
+        }
+      </script>
+{% endblock %}
