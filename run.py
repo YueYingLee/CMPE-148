@@ -1,3 +1,3 @@
-from app import myapp_obj
+from app import myapp_obj, socketio
 
-myapp_obj.run()
+socketio.run(myapp_obj, debug=True)
