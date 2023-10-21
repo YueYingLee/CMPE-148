@@ -7,7 +7,7 @@ from flask_login import logout_user
 from flask_login import login_required
 from flask_socketio import join_room, leave_room, send, SocketIO
 from datetime import datetime
-from app.models import User, Conversations, Messages
+from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.login import LoginForm
 from sqlalchemy import desc
@@ -24,7 +24,7 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        valid_user = User.query.filter_by(username=form.name.data).first()
+        valid_user = Users.query.filter_by(username=form.name.data).first()
         if valid_user != None:
             if valid_user.check_password(form.password.data) == True:
                 login_user(valid_user)
@@ -48,11 +48,11 @@ def logout():
 def register():
     registerForm = registerUser()
     if registerForm.validate_on_submit():
-        same_Username = User.query.filter_by(
+        same_Username = Users.query.filter_by(
             username=registerForm.username.data
         ).first()
         if same_Username == None:
-            user = User()
+            user = Users()
             user.username = registerForm.username.data
             user.set_password(registerForm.password.data)
 
@@ -70,7 +70,7 @@ def homepage():
     form = UserSearch()
     #after searching for a user, verify searched user exists and the current user is not trying to message themselves
     if form.validate_on_submit():
-        searched_user = User.query.filter_by(username=form.name.data).first()
+        searched_user = Users.query.filter_by(username=form.name.data).first()
         if searched_user != None:
             if searched_user.username == user.username:
                 flash("You cannot message yourself")
@@ -132,7 +132,7 @@ def handle_message(payload):
     #get each needed attribute for a message
     msg_content = payload["message"] #content
     new_message = Messages()
-    new_message.sender_id = user.user_id #sender_id
+    new_message.sender_name = user.username #sender name
     new_message.conversation_id = payload["conversation_id"] #convo_id
     new_message.timestamp = datetime.now() #timestamp
     new_message.msg_content = msg_content 
