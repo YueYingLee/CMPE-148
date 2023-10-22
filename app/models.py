@@ -13,10 +13,10 @@ name -> user entered name
 password_hash -> user entered password stored as hash
 
 """
-class User(db.Model, UserMixin):
+class Users(db.Model, UserMixin):
     user_id=db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(30), nullable=False, unique=True)
-    password_hash = db.Column(db.String(128), nullable=False)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password_hash = db.Column(db.String(256), nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -41,7 +41,7 @@ list in the backend if you need to.
 """
 class Conversations(db.Model):
     conv_id = db.Column(db.Integer, primary_key=True)
-    participants = db.Column(db.String)
+    participants = db.Column(db.String(256))
     def __repr__(self): #for debugging process
         return f'<Conversations {self.conv_id}, {self.participants}: >'
 
@@ -56,13 +56,13 @@ msg_content -> the actual content of the message. 1024 character limit
 """
 class Messages(db.Model):
     msg_id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey(User.user_id)) 
+    sender_name = db.Column(db.String(20), db.ForeignKey(Users.username)) 
     conversation_id = db.Column(db.Integer, db.ForeignKey(Conversations.conv_id))
     timestamp = db.Column(db.DateTime, default=datetime.timezone.utc)
-    msg_content = db.Column(db.String(1024))
+    msg_content = db.Column(db.Text)
     def __repr__(self): #for debugging process
         return f'<Messages {self.msg_content}:>'
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id)) 
+    return Users.query.get(int(id)) 
