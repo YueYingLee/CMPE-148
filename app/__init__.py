@@ -11,7 +11,7 @@ myapp_obj = Flask(__name__)
 socketio = SocketIO(myapp_obj)
 myapp_obj.config.from_mapping(
    SECRET_KEY = 'you-will-never-guess',
-   SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:#jySJSU2024@localhost/cmpe148_project'
+   SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:ihcmpe148@cmpe1483c1s.cymhhes8mryj.us-east-2.rds.amazonaws.com/CMPE148_PROJECT'
    )
 myapp_obj.config['TESTING'] = False
 
