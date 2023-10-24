@@ -5,6 +5,13 @@
   <p id="error">{{error}}</p>
   {% endif %}
 
+  <h2> Create a new conversation below. Enter the username of each person you want to add, 
+    then click "Create conversation"
+  </h2>
+  <h2> Click "View my conversations" to access your current conversations </h2>
+  <button> View my conversations </button>
+  <br> </br>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div class="alert alert-danger">
@@ -17,19 +24,20 @@
     {% endif %}
     {% endwith %}
 
-  <form action="" method="POST" novalidate class="login-form">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      <label for="name" class="form-label"> Search for User</label>
-      {{ form.name(size=30, id="username", class="form-control rounded-pill") }}
-      {% for error in form.name.errors %}
-      <span class="text-danger">[{{ error }}]</span>
-      {% endfor %}
-    </div>
+    <form action="" method="POST" novalidate class="login-form">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        <label for="name" class="form-label"></label>
+        {{form.names.label}}
+        {{form.names}}
+        {% for error in form.names.errors %}
+        <span class="text-danger">[{{ error }}]</span>
+        {% endfor %}
+      </div>
 
-    <div class="form-group">
-      {{ form.submit(class="btn btn-primary rounded-pill") }}
-    </div>
-  </form>
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary rounded-pill") }}
+      </div>
+    </form>
 </div>
 {% endblock %}
