@@ -1,10 +1,13 @@
 {% extends 'base.html' %} {% block content %}
 <div id="home-container">
-  <h1 id="home-header">Flask Chat 💬. Conversation</h1>
+  <h1 id="home-header">Flask Chat 💬. </h1>
   {% if error %}
   <p id="error">{{error}}</p>
   {% endif %}
 
+  <h2> Conversation with...</h2>
+  {{participants}}
+  
   {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div class="alert alert-danger">

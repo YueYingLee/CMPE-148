@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, FormField, FieldList
 from wtforms.validators import DataRequired
 
-class UserSearch(FlaskForm):
-    name = StringField('Search for User', validators=[DataRequired()])
-    submit = SubmitField('Chat')
+class UserForm(FlaskForm):
+    names = StringField('Enter username(s) seperate by comma', validators=[DataRequired()])
+    submit = SubmitField('Create conversation')
