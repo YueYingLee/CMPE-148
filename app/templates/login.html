@@ -29,7 +29,7 @@
       <form action="" method="POST" novalidate class="login-form">
         {{ form.hidden_tag() }}
         <div class="form-group">
-          <label for="name" class="form-label">name</label>
+          <label for="name" class="form-label">Name</label>
           {{ form.name(size=30, id="username", class="form-control rounded-pill") }}
           {% for error in form.name.errors %}
           <span class="text-danger">[{{ error }}]</span>
