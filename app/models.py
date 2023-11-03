@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy.types import Boolean, Date, DateTime, Float, Integer, Text, Time, Interval, ARRAY
+from sqlalchemy.types import Boolean, Date, DateTime, Float, Integer, Text, Time, Interval, BLOB, VARBINARY
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login
 from flask_login import UserMixin
@@ -59,9 +59,10 @@ class Messages(db.Model):
     sender_name = db.Column(db.String(20), db.ForeignKey(Users.username)) 
     conversation_id = db.Column(db.Integer, db.ForeignKey(Conversations.conv_id))
     timestamp = db.Column(db.DateTime, default=datetime.timezone.utc)
-    msg_content = db.Column(db.Text)
+    encrypted_msg = db.Column(db.BLOB)
+    encryption_key = db.Column(db.VARBINARY)
     def __repr__(self): #for debugging process
-        return f'<Messages {self.msg_content}:>'
+        return f'<Messages {self.encrypted_msg}:>'
 
 @login.user_loader
 def load_user(id):

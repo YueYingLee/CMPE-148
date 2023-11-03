@@ -15,6 +15,7 @@ from app.user_search import UserForm
 from datetime import datetime
 from app import myapp_obj, db
 from . import socketio
+from cryptography.fernet import Fernet
 
 @myapp_obj.route("/")
 def index():
@@ -30,9 +31,9 @@ def login():
                 login_user(valid_user)
                 return redirect(url_for("homepage"))
             else:
-                flash(f"Invalid password. Try again.")
+                flash(f"Login failed.")
         else:
-            flash(f"Invalid username. Try again or register an account.")
+            flash(f"Login failed.")
 
     return render_template("login.html", form=form)
 
@@ -60,7 +61,7 @@ def register():
             db.session.commit()
             return redirect("/login")
         else:
-            flash("The username is not available. Please choose another username.")
+            flash("Registration failed")
     return render_template("register.html", registerForm=registerForm)
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
@@ -75,7 +76,7 @@ def homepage():
         for conv_user in form.names.data.split(", "):
             searched_user = Users.query.filter_by(username=conv_user).first()
             if searched_user == None:
-                flash(f"User {conv_user} does not exist. Please try again")
+                flash(f"Cannot create conversation")
                 valid_users = False
             elif searched_user.username == user.username:
                 flash('You cannot add yourself to a conversation')
@@ -105,6 +106,16 @@ def homepage():
                 
     return render_template("home.html",user = user, form = form)
 
+@myapp_obj.route("/viewConversations", methods=["GET", "POST"])
+@login_required
+def view_conversations():
+    #get current user
+    #from Conversations relation, get every conversation that contains this user (useranme) in participants
+    #sort (?) these conversations. potentially by id, participants length, etc? or add a "last modified" field
+    #which would be the timestamp of the last sent message and order by that (newest to oldest)
+    #render this in HTML template
+    return 0
+
 @myapp_obj.route("/conversation/conversation_id=<conversation_id>", methods = ["GET", "POST"])
 @login_required
 def conversation(conversation_id):
@@ -122,8 +133,26 @@ def conversation(conversation_id):
      #valid user participation, get all the messages sorted from oldest to newest
      all_messages = Messages.query.filter_by(conversation_id = current_conversation.conv_id).all()
      sorted_messages = sorted(all_messages, key=lambda message: message.timestamp)
-     print(sorted_messages) #debugging
-     return render_template("conversation.html", all_messages = all_messages, conversation_id = conversation_id, participants = participants)
+     #create new data structure (list of dictionaries (?))
+     #each dictionary has: username, timestamp, decrypted message
+     #sort the list by each dictionary timestamp (newest to oldest)
+     #pass this to HTML for rendering 
+     decrypted_messages = []
+     for message in sorted_messages:
+         encrypted_msg = message.encrypted_msg
+         encryption_key = message.encryption_key
+         cipher = Fernet(encryption_key)
+         decrypted_message = cipher.decrypt(encrypted_msg)
+         decrypted_message = decrypted_message.decode('utf-8') #actual message content, send to frontend
+         msg_to_display = {
+             "sender_name": message.sender_name, 
+             "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S"), 
+             "message": decrypted_message
+         }
+         decrypted_messages.append(msg_to_display)
+
+     print(decrypted_messages) #debugging
+     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants)
 
 
 """
@@ -134,14 +163,34 @@ payload = user message from the frontend
 def handle_message(payload):
     print("MESSAGE FROM FRONTEND") #debuggin purposes
 
+    #preparing encryption / key
+    key = Fernet.generate_key() #generate a unique key for each message
+    cipher = Fernet(key) #Fernet using a simplified version of AES 
+
     user = current_user
-    #get each needed attribute for a message
-    msg_content = payload["message"] #content
+
+    msg_content = payload["message"] #the actual message that the user sent
+
+    encrypted_message = cipher.encrypt(msg_content.encode('utf-8')) #encode and encrypt sent message
+    print(f"ENCRYPTED MSG:  {encrypted_message}")
+    decrypted_message = cipher.decrypt(encrypted_message)
+    decrypted_message = decrypted_message.decode('utf-8') #actual message content, send to frontend
+
     new_message = Messages()
     new_message.sender_name = user.username #sender name
     new_message.conversation_id = payload["conversation_id"] #convo_id
     new_message.timestamp = datetime.now() #timestamp
-    new_message.msg_content = msg_content 
+    new_message.encrypted_msg = encrypted_message
+    new_message.encryption_key = key
+    
+   
+    display_message = {
+        'message': decrypted_message,
+        'sender_name': new_message.sender_name,
+        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+
+    }
+    send(display_message) 
     
     db.session.add(new_message)
     db.session.commit()
