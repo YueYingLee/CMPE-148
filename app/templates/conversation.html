@@ -46,7 +46,13 @@
     {% endwith %}
         
     <script type="text/javascript">
+      //var socketio = io.connect("http://127.0.0.1:5000/")
       var socketio = io();
+      function joinConversation(conversationId) {
+            socketio.emit('join_room', {conversation_id: "{{conversation_id}}", user: "{{user.username}}"});
+        }
+      joinConversation();
+
       socketio.on("message", function(message){
         createChatItem(message['message'], message['sender_name'], message['timestamp'])
       })
@@ -59,7 +65,8 @@
           <br>
           `
           messages.innerHTML+= content
-        }
+          }
+
     </script>
 
       <div class="message-container" id="messages">
