@@ -14,13 +14,21 @@
         <h3 class="float-md-start mb-0"> Title </h3>
         <nav class="nav nav-masthead justify-content-center float-md-end">
             <a class="nav-link active" aria-current="page" href="/homepage">Home</a>
-            <a class="nav-link" href=""> View Conversations </a>
             <a class="nav-link" href=""> About </a>
             <a class="nav-link" href="/logout"> Sign Out</a>
         </nav>
     </div>
   </header>
-<hr> 
+
+<div class="sidebar">
+  <h3 class="title"> Conversations </h3>
+  <div class="convo-holder">
+    {%for conversation in user_conversations%}
+    <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}"> {{conversation.participants}} </a>
+    {% endfor %}
+  </div>
+  
+</div>
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -37,7 +45,7 @@
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
       <main class="px-3">
         <h1>Hello, {{user.username}}.</h1>
-        <p class="lead">Navigate using the header or create a new conversation below</p>
+        <p class="lead">Continue a conversation or create a new conversation below</p>
         <p class="lead">
           <form method="POST" novalidate class="search-form">
             {{ form.hidden_tag() }}

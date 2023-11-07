@@ -17,6 +17,15 @@ from app import myapp_obj, db
 from . import socketio
 from cryptography.fernet import Fernet
 
+def get_conversations():
+    #get current user
+    #from Conversations relation, get every conversation that contains this user (useranme) in participants
+    #sort (?) these conversations. potentially by id, participants length, etc? or add a "last modified" field
+    #which would be the timestamp of the last sent message and order by that (newest to oldest)
+    #render this in HTML template
+    user = current_user
+    return Conversations.query.filter(Conversations.participants.contains(user.username)).all()
+
 @myapp_obj.route("/")
 def index():
     return render_template("login.html")
@@ -68,6 +77,7 @@ def register():
 @login_required
 def homepage():
     user = current_user
+    user_conversations = get_conversations()
     form = UserForm()
     #after searching for a user, verify searched user exists and the current user is not trying to message themselves
     if form.validate_on_submit():
@@ -104,22 +114,13 @@ def homepage():
         
 
                 
-    return render_template("home.html",user = user, form = form)
-
-@myapp_obj.route("/viewConversations", methods=["GET", "POST"])
-@login_required
-def view_conversations():
-    #get current user
-    #from Conversations relation, get every conversation that contains this user (useranme) in participants
-    #sort (?) these conversations. potentially by id, participants length, etc? or add a "last modified" field
-    #which would be the timestamp of the last sent message and order by that (newest to oldest)
-    #render this in HTML template
-    return 0
+    return render_template("home.html",user = user, form = form, user_conversations = user_conversations)
 
 @myapp_obj.route("/conversation/conversation_id=<conversation_id>", methods = ["GET", "POST"])
 @login_required
 def conversation(conversation_id):
      user = current_user
+     user_conversations = get_conversations()
      print(conversation_id) #debugging
      #get the current conversation 
      current_conversation = Conversations.query.filter_by(conv_id = conversation_id).first()
@@ -152,7 +153,7 @@ def conversation(conversation_id):
          decrypted_messages.append(msg_to_display)
 
      print(decrypted_messages) #debugging
-     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants)
+     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations)
 
 
 """
