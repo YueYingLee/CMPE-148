@@ -1,9 +1,14 @@
+#conversation{
+  position: relative;
+  left: 250px;
+}
 .message-container {
     width: 70%;
-    height: 60%; /* Set the height to control the visible message area */
+    height: 80%; 
     border: 1px solid #ccc;
     background-color: #36383e;
-    overflow-y: auto; /* Enable vertical scrolling if messages overflow the container */
+    overflow-y: auto; 
+    
   }
   
   .message {
@@ -18,13 +23,12 @@
     flex-direction: column;
     justify-content: left;
     align-items: left;
-    height: 100vh; /* Optional to make it full height of the viewport */
+    height: 100vh; 
 }
 
-hr {
-  border: 2px solid white; /* Change the color and style as needed */
-  margin: 20px 0; /* Adjust the margin to control the space between the div and the line */
-  width: 100%;
+.mb-auto{
+  height: 40px;
+  border-bottom: 2px solid white;
 }
 
 #message-box{
@@ -35,4 +39,23 @@ hr {
   width: 66%;
 }
 
+.sidebar {
+  margin-top: 40px;
+  height: 100%;
+  width: 20%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #36393e;
+  border-right: 2px solid white;
+  overflow-y: auto;
+  }
+
+  .title{
+    margin-top: 15px;
+    text-align: center;
+  }
   
+  .convo-holder{
+    text-align: center;
+  }
