@@ -16,6 +16,7 @@ from datetime import datetime
 from app import myapp_obj, db
 from . import socketio
 from cryptography.fernet import Fernet
+from flask_cors import CORS, cross_origin
 
 def get_conversations():
     #get current user
@@ -165,20 +166,19 @@ payload = user message from the frontend
 @socketio.on('message')
 def handle_message(payload):
 
+    print(payload)
     #preparing encryption / key
     key = Fernet.generate_key() #generate a unique key for each message
     cipher = Fernet(key) #Fernet using a simplified version of AES 
 
-    user = current_user
-
     msg_content = payload["message"] #the actual message that the user sent
-
+    user = payload["username"]
     encrypted_message = cipher.encrypt(msg_content.encode('utf-8')) #encode and encrypt sent message
     decrypted_message = cipher.decrypt(encrypted_message)
     decrypted_message = decrypted_message.decode('utf-8') #actual message content, send to frontend
 
     new_message = Messages()
-    new_message.sender_name = user.username #sender name
+    new_message.sender_name = user #sender name
     new_message.conversation_id = payload["conversation_id"] #convo_id
     new_message.timestamp = datetime.now() #timestamp
     new_message.encrypted_msg = encrypted_message
