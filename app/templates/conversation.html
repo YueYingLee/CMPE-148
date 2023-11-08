@@ -46,8 +46,8 @@
     {% endwith %}
         
     <script type="text/javascript">
-      //var socketio = io.connect("http://127.0.0.1:5000/")
-      var socketio = io();
+      var socketio = io.connect("http://10.20.6.8:5000")
+      //var socketio = io();
       function joinConversation(conversationId) {
             socketio.emit('join_room', {conversation_id: "{{conversation_id}}", user: "{{user.username}}"});
         }
@@ -92,7 +92,7 @@
           if (msgInput.value === "") return;
           //get the message, then "emit" a message event for the backend 
           var msg = msgInput.value;
-          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}"});
+          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}", username: "{{user.username}}"});
           msgInput.value = "";
         }
       </script>
