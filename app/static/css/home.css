@@ -1,3 +1,8 @@
+.mb-auto{
+  height: 40px;
+  border-bottom: 2px solid white;
+}
+
 .cover-container {
   display: flex;
   flex-direction: column;
@@ -19,5 +24,32 @@
 }
 
 h1{
+  text-align: center;
+}
+
+hr {
+  border: 2px solid white; /* Change the color and style as needed */
+  margin: 20px 0; /* Adjust the margin to control the space between the div and the line */
+  width: 100%;
+}
+
+.sidebar {
+  margin-top: 40px;
+  height: 100%;
+  width: 20%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #36393e;
+  border-right: 2px solid white;
+  overflow-y: auto;
+  }
+
+.title{
+  margin-top: 10px;
+  text-align: center;
+}
+
+.convo-holder{
   text-align: center;
 }

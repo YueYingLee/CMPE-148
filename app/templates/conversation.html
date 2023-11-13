@@ -1,13 +1,38 @@
+<!-- TO DO: DISPLAY MESSAGES + MAKE CHAT WINDOW (?) + DISPLAY SENT MESSAGE-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+
 {% extends 'base.html' %} {% block content %}
 <div id="home-container">
-  <h1 id="home-header">Flask Chat 💬. </h1>
   {% if error %}
   <p id="error">{{error}}</p>
   {% endif %}
 
-  <h2> Conversation with...</h2>
-  {{participants}}
+  <header class="mb-auto">
+    <div>
+        <h3 class="float-md-start mb-0"> Title </h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link active" aria-current="page" href="/homepage">Home</a>
+            <a class="nav-link" href=""> About </a>
+            <a class="nav-link" href="/logout"> Sign Out</a>
+        </nav>
+    </div>
+ </header>
+
+ <div class="sidebar">
+  <h3 class="title"> Conversations </h3>
+  <div class="convo-holder">
+    {%for conversation in user_conversations%}
+    <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}"> {{conversation.participants}} </a>
+    {% endfor %}
+  </div>
   
+</div>
+
+ <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="conversation"> 
+  <h3> Conversation with {{participants}}</h3>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div class="alert alert-danger">
@@ -19,27 +44,47 @@
     </div>
     {% endif %}
     {% endwith %}
-    
-    <div id="room-container">
-      <div id="room-subsection">
-      </div>
-      <div id="chat-room-widget">
-        <div id="msgs-container">
-          <ul id="messages"></ul>
-        </div>
-        <div id="message-box">
-          <input type="text" placeholder="Enter your message" id="message-input" name="message" />
-          <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
-        </div>
+        
+    <script type="text/javascript">
+      var socketio = io.connect("http://10.20.6.8:5000")
+      //var socketio = io();
+      function joinConversation(conversationId) {
+            socketio.emit('join_room', {conversation_id: "{{conversation_id}}", user: "{{user.username}}"});
+        }
+      joinConversation();
+
+      socketio.on("message", function(message){
+        createChatItem(message['message'], message['sender_name'], message['timestamp'])
+      })
+      
+      function createChatItem(message, sender, timestamp){
+          var messages = document.getElementById("messages")
+          const content = `
+          <p> ${sender} @ ${timestamp}: ${message}
+          <br> 
+          <br>
+          `
+          messages.innerHTML+= content
+          }
+
+    </script>
+
+      <div class="message-container" id="messages">
+        {%for message in decrypted_messages%}
+          <script type="text/javascript">
+            createChatItem("{{message['message']}}", "{{message['sender_name']}}", "{{message['timestamp']}}")
+          </script>
+        {% endfor %}
       </div>
 
+      
+          <div id="message-box">
+            <input type="text" placeholder="Enter your message" id="message-input" name="message" />
+            <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
+          </div>
+
+
       <script type="text/javascript">
-        var socketio = io();
-        //anon function in javascript
-        //"hears" message event fron the backend
-        
-       
-    
         function sendMessage() {
           //getting message input
           var msgInput = document.getElementById("message-input");
@@ -47,8 +92,11 @@
           if (msgInput.value === "") return;
           //get the message, then "emit" a message event for the backend 
           var msg = msgInput.value;
-          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}"});
+          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}", username: "{{user.username}}"});
           msgInput.value = "";
         }
       </script>
+    </div>
+    </div>
+</div>
 {% endblock %}

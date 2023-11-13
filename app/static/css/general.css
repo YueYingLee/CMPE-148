@@ -1,6 +1,10 @@
 html, body{
-    background-color: bisque;
+    background-color: #36393E;
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%
+  }
+
+  body{
+    color: white;
   }
