@@ -16,6 +16,7 @@ from datetime import datetime
 from app import myapp_obj, db
 from . import socketio
 from cryptography.fernet import Fernet
+from flask_cors import CORS, cross_origin
 
 def get_conversations():
     #get current user
@@ -129,8 +130,6 @@ def conversation(conversation_id):
      if user.username not in participants:
         flash('You do not have access to this conversation')
         return redirect("/homepage")
-     
-
      #valid user participation, get all the messages sorted from oldest to newest
      all_messages = Messages.query.filter_by(conversation_id = current_conversation.conv_id).all()
      sorted_messages = sorted(all_messages, key=lambda message: message.timestamp)
@@ -151,10 +150,14 @@ def conversation(conversation_id):
              "message": decrypted_message
          }
          decrypted_messages.append(msg_to_display)
+     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user)
 
-     print(decrypted_messages) #debugging
-     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations)
 
+@socketio.on('join_room')
+def handle_join(data):
+    room = str(data['conversation_id'])
+    join_room(room)
+    print(f"{data['user']} joined conversation number {data['conversation_id']}")
 
 """
 handles "message" event from the javascript socket io (client side)
@@ -162,23 +165,20 @@ payload = user message from the frontend
 """
 @socketio.on('message')
 def handle_message(payload):
-    print("MESSAGE FROM FRONTEND") #debuggin purposes
 
+    print(payload)
     #preparing encryption / key
     key = Fernet.generate_key() #generate a unique key for each message
     cipher = Fernet(key) #Fernet using a simplified version of AES 
 
-    user = current_user
-
     msg_content = payload["message"] #the actual message that the user sent
-
+    user = payload["username"]
     encrypted_message = cipher.encrypt(msg_content.encode('utf-8')) #encode and encrypt sent message
-    print(f"ENCRYPTED MSG:  {encrypted_message}")
     decrypted_message = cipher.decrypt(encrypted_message)
     decrypted_message = decrypted_message.decode('utf-8') #actual message content, send to frontend
 
     new_message = Messages()
-    new_message.sender_name = user.username #sender name
+    new_message.sender_name = user #sender name
     new_message.conversation_id = payload["conversation_id"] #convo_id
     new_message.timestamp = datetime.now() #timestamp
     new_message.encrypted_msg = encrypted_message
@@ -191,7 +191,8 @@ def handle_message(payload):
         "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
     }
-    send(display_message) 
+    room = str(payload["conversation_id"])
+    send(display_message, to = room) 
     
     db.session.add(new_message)
     db.session.commit()

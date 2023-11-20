@@ -42,12 +42,20 @@
     {% endif %}
     {% endwith %}
 
+    <script type="text/javascript">
+      function createConversation(){
+        var socketio = io();
+        socketio.emit("create_conversation", {participants: form.names} )
+        return false;
+      }
+    </script>
+
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
       <main class="px-3">
         <h1>Hello, {{user.username}}.</h1>
         <p class="lead">Continue a conversation or create a new conversation below</p>
         <p class="lead">
-          <form method="POST" novalidate class="search-form">
+          <form method="POST" novalidate class="search-form" onsubmit="createConversation()">
             {{ form.hidden_tag() }}
             <div class="form-group">
               <label for="name" class="form-label"></label>
@@ -69,6 +77,7 @@
         <p> <a href="https://github.com/YueYingLee/CMPE-148" style="color: white"> SJSU CMPE148 Project by 3C1S </a>.</p>
       </footer>
     </div>
+    
     
 </div>
 {% endblock %}
