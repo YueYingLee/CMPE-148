@@ -58,6 +58,7 @@ def logout():
 
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
+    
     registerForm = registerUser()
     if registerForm.validate_on_submit():
         same_Username = Users.query.filter_by(
@@ -73,7 +74,7 @@ def register():
             return redirect("/login")
         else:
             flash("Registration failed")
-    return render_template("register.html", registerForm=registerForm)
+    return render_template("register2.html", registerForm=registerForm)
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
