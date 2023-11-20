@@ -46,7 +46,7 @@ def login():
         else:
             flash(f"Login failed.")
 
-    return render_template("login.html", form=form)
+    return render_template("login2.html", form=form)
 
 
 @myapp_obj.route("/logout", methods=["GET", "POST"])
