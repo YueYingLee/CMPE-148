@@ -27,9 +27,10 @@ def get_conversations():
     user = current_user
     return Conversations.query.filter(Conversations.participants.contains(user.username)).all()
 
+#This is the first page user will reach when they run the program
 @myapp_obj.route("/")
 def index():
-    return render_template("login.html")
+    return render_template("index.html")
 
 @myapp_obj.route("/login", methods=["GET", "POST"])
 def login():
@@ -45,7 +46,7 @@ def login():
         else:
             flash(f"Login failed.")
 
-    return render_template("login.html", form=form)
+    return render_template("login2.html", form=form)
 
 
 @myapp_obj.route("/logout", methods=["GET", "POST"])
@@ -57,6 +58,7 @@ def logout():
 
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
+    
     registerForm = registerUser()
     if registerForm.validate_on_submit():
         same_Username = Users.query.filter_by(
@@ -72,7 +74,7 @@ def register():
             return redirect("/login")
         else:
             flash("Registration failed")
-    return render_template("register.html", registerForm=registerForm)
+    return render_template("register2.html", registerForm=registerForm)
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
