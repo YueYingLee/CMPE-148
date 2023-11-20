@@ -1,0 +1,17 @@
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<style>
+  a {
+    text-decoration: none;
+  }
+ </style> 
+<div id="outer">
+  <a href="/register" class="button_slide slide_right">Register</a>
+  <br> <br><br>
+  <a href="/login" class="button_slide slide_right">Login</a>
+</div> 
+        
+{% endblock %}
