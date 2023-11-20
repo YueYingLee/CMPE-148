@@ -17,6 +17,20 @@ body{
     height: 100vh;
 }
 
+.btn-like {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #d1dfe3;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+
 .container{
     background-color: #fff;
     border-radius: 30px;
