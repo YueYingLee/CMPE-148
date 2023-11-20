@@ -27,9 +27,10 @@ def get_conversations():
     user = current_user
     return Conversations.query.filter(Conversations.participants.contains(user.username)).all()
 
+#This is the first page user will reach when they run the program
 @myapp_obj.route("/")
 def index():
-    return render_template("login.html")
+    return render_template("index.html")
 
 @myapp_obj.route("/login", methods=["GET", "POST"])
 def login():
