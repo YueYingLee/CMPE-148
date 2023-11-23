@@ -1,6 +1,9 @@
-.mb-auto{
-  height: 40px;
-  border-bottom: 2px solid white;
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.main {
+  background: linear-gradient(60deg, #e2e2e2, #c9d6ff);
 }
 
 .cover-container {
@@ -29,27 +32,33 @@ h1{
 
 hr {
   border: 2px solid white; /* Change the color and style as needed */
-  margin: 20px 0; /* Adjust the margin to control the space between the div and the line */
+  margin: 1%;
   width: 100%;
 }
 
-.sidebar {
-  margin-top: 40px;
-  height: 100%;
-  width: 20%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #36393e;
-  border-right: 2px solid white;
-  overflow-y: auto;
+.left {
+  min-height: 93vh;
+  background: linear-gradient(60deg, rgb(202, 119, 193), #378fb7);  
+  text-align: center;
   }
 
 .title{
-  margin-top: 10px;
+  padding: 4%;
   text-align: center;
 }
 
 .convo-holder{
   text-align: center;
+  list-style-type: none;
+}
+
+.convo-nav-link {
+  text-decoration: none;
+  color: white;
+}
+
+.right {
+  text-align: center;
+  padding: 5%;
+  color: black;
 }
