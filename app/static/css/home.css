@@ -6,26 +6,6 @@
   background: linear-gradient(60deg, #e2e2e2, #c9d6ff);
 }
 
-.cover-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.cover-container .main {
-  text-align: center;
-}
-
-.cover-container form.search-form {
-  text-align: center;
-}
-
-.cover-container form.search-form .form-group-button{
-  padding-top: 20px;
-}
-
 h1{
   text-align: center;
 }
