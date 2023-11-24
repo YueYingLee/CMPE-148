@@ -29,9 +29,9 @@
   </div>
   
 </div>
+ <div class="cover-container d-flex w-100 h-100 p-3 mx-auto" id="conversation"> 
 
- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="conversation"> 
-  <h3> Conversation with {{participants}}</h3>
+  <h3 class = "title-header"> Conversation with {{participants}}</h3>
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -60,7 +60,7 @@
       function createChatItem(message, sender, timestamp){
           var messages = document.getElementById("messages")
           const content = `
-          <p> ${sender} @ ${timestamp}: ${message}
+          <p class = "msg"> ${sender} @ ${timestamp}: ${message}
           <br> 
           <br>
           `
@@ -96,7 +96,24 @@
           msgInput.value = "";
         }
       </script>
-    </div>
+        <div class = "user-list">
+            <div class = "user-online">
+              <p class = "online user-item">Online</p>
+                <script type="text/javascript">
+                  function get_users(participants){
+                      var userArray = participants.split(',');
+                      for (var i=0; i < userArray.length; i++){
+                        
+                      }
+                  }
+                </script>
+            </div>
+            <div class = "user-offline">
+              <p class = "offline user-item">Offline</p>
+
+            </div>
+        </div>
+    </div> 
     </div>
 </div>
 {% endblock %}
