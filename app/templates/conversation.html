@@ -29,9 +29,9 @@
   </div>
   
 </div>
-
- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="conversation"> 
-  <h3> Conversation with {{participants}}</h3>
+<div class = "bbox">
+ <div class="cover-container d-flex w-100 h-100 p-3 mx-auto " id="conversation"> 
+  <h3 class = "chat-title"> Conversation with {{participants}}</h3>
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -46,7 +46,7 @@
     {% endwith %}
         
     <script type="text/javascript">
-      var socketio = io.connect("http://10.20.6.8:5000")
+      var socketio = io.connect("http://192.168.0.195:5000")
       //var socketio = io();
       function joinConversation(conversationId) {
             socketio.emit('join_room', {conversation_id: "{{conversation_id}}", user: "{{user.username}}"});
@@ -60,15 +60,14 @@
       function createChatItem(message, sender, timestamp){
           var messages = document.getElementById("messages")
           const content = `
-          <p> ${sender} @ ${timestamp}: ${message}
+          <p class = "msg-block"> ${sender} @ ${timestamp}: ${message}
           <br> 
           <br>
           `
           messages.innerHTML+= content
           }
-
+          
     </script>
-
       <div class="message-container" id="messages">
         {%for message in decrypted_messages%}
           <script type="text/javascript">
@@ -96,7 +95,10 @@
           msgInput.value = "";
         }
       </script>
+      <div class = "test-container2">hello wrold2</div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>
+
 {% endblock %}

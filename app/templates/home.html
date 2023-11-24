@@ -19,9 +19,9 @@
         </nav>
     </div>
   </header>
-
+<div class = "testcontainer">
 <div class="sidebar">
-  <h3 class="title"> Conversations </h3>
+  <h3 class="title"> testConversations </h3>
   <div class="convo-holder">
     {%for conversation in user_conversations%}
     <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}"> {{conversation.participants}} </a>
@@ -77,7 +77,7 @@
         <p> <a href="https://github.com/YueYingLee/CMPE-148" style="color: white"> SJSU CMPE148 Project by 3C1S </a>.</p>
       </footer>
     </div>
-    
+  </div>
     
 </div>
 {% endblock %}
