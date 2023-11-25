@@ -1,5 +1,6 @@
 <!-- TO DO: DISPLAY MESSAGES + MAKE CHAT WINDOW (?) + DISPLAY SENT MESSAGE-->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
 
@@ -9,94 +10,137 @@
   <p id="error">{{error}}</p>
   {% endif %}
 
-  <header class="mb-auto">
+  <!-- <header class="mb-auto">
     <div>
-        <h3 class="float-md-start mb-0"> Title </h3>
-        <nav class="nav nav-masthead justify-content-center float-md-end">
-            <a class="nav-link active" aria-current="page" href="/homepage">Home</a>
-            <a class="nav-link" href=""> About </a>
-            <a class="nav-link" href="/logout"> Sign Out</a>
-        </nav>
+      <h3 class="float-md-start mb-0"> Title </h3>
+      <nav class="nav nav-masthead justify-content-center float-md-end">
+        <a class="nav-link active" aria-current="page" href="/homepage">Home</a>
+        <a class="nav-link" href=""> About </a>
+        <a class="nav-link" href="/logout"> Sign Out</a>
+      </nav>
     </div>
- </header>
+  </header> -->
 
- <div class="sidebar">
-  <h3 class="title"> Conversations </h3>
-  <div class="convo-holder">
-    {%for conversation in user_conversations%}
-    <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}"> {{conversation.participants}} </a>
-    {% endfor %}
-  </div>
-  
-</div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" style="margin-left: 2%;" href="#">Title</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" id="conversation"> 
-  <h3> Conversation with {{participants}}</h3>
-
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert alert-danger">
-      <ul class="list-unstyled">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/homepage">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Sign Out</a>
+        </li>
       </ul>
     </div>
-    {% endif %}
-    {% endwith %}
-        
-    <script type="text/javascript">
-      var socketio = io.connect("http://10.20.6.8:5000")
-      //var socketio = io();
-      function joinConversation(conversationId) {
-            socketio.emit('join_room', {conversation_id: "{{conversation_id}}", user: "{{user.username}}"});
-        }
-      joinConversation();
+  </nav>
 
-      socketio.on("message", function(message){
-        createChatItem(message['message'], message['sender_name'], message['timestamp'])
-      })
-      
-      function createChatItem(message, sender, timestamp){
-          var messages = document.getElementById("messages")
-          const content = `
-          <p> ${sender} @ ${timestamp}: ${message}
-          <br> 
-          <br>
-          `
-          messages.innerHTML+= content
-          }
+  <!-- <div class="sidebar">
+    <h3 class="title"> Conversations </h3>
+    <div class="convo-holder">
+      {%for conversation in user_conversations%}
+      <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}">
+        {{conversation.participants}} </a>
+      {% endfor %}
+    </div>
 
-    </script>
+  </div> -->
 
-      <div class="message-container" id="messages">
-        {%for message in decrypted_messages%}
-          <script type="text/javascript">
-            createChatItem("{{message['message']}}", "{{message['sender_name']}}", "{{message['timestamp']}}")
-          </script>
-        {% endfor %}
+  <div class="main">
+    <div class="row">
+      <div class="left col-4">
+        <h3 class="title">Conversations</h3>
+        <hr>
+        <div class="convo-holder">
+          {%for conversation in user_conversations%}
+          <li>
+            <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}">
+              {{conversation.participants}} </a>
+          </li>
+          {% endfor %}
+        </div>
       </div>
+      <div class="right col-8">
+        <div class="cover-container" id="conversation">
+          <h3> Conversation with {{participants}}</h3>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="alert alert-danger">
+            <ul class="list-unstyled">
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+          {% endwith %}
 
-      
+          <script type="text/javascript">
+            var socketio = io.connect("http://10.20.6.8:5000")
+            //var socketio = io();
+            function joinConversation(conversationId) {
+              socketio.emit('join_room', { conversation_id: "{{conversation_id}}", user: "{{user.username}}" });
+            }
+            joinConversation();
+
+            socketio.on("message", function (message) {
+              createChatItem(message['message'], message['sender_name'], message['timestamp'])
+            })
+
+            function createChatItem(message, sender, timestamp) {
+              var messages = document.getElementById("messages")
+              const content = `
+                <p> ${sender} @ ${timestamp}: ${message}
+                <br> 
+                <br>
+                `
+              messages.innerHTML += content
+            }
+
+          </script>
+
+          <div class="message-container" id="messages">
+            {%for message in decrypted_messages%}
+            <script type="text/javascript">
+              createChatItem("{{message['message']}}", "{{message['sender_name']}}", "{{message['timestamp']}}")
+            </script>
+            {% endfor %}
+          </div>
+
+
           <div id="message-box">
             <input type="text" placeholder="Enter your message" id="message-input" name="message" />
             <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
           </div>
 
 
-      <script type="text/javascript">
-        function sendMessage() {
-          //getting message input
-          var msgInput = document.getElementById("message-input");
-          //no input
-          if (msgInput.value === "") return;
-          //get the message, then "emit" a message event for the backend 
-          var msg = msgInput.value;
-          socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}", username: "{{user.username}}"});
-          msgInput.value = "";
-        }
-      </script>
+          <script type="text/javascript">
+            function sendMessage() {
+              //getting message input
+              var msgInput = document.getElementById("message-input");
+              //no input
+              if (msgInput.value === "") return;
+              //get the message, then "emit" a message event for the backend 
+              var msg = msgInput.value;
+              socketio.emit("message", { message: msg, conversation_id: "{{conversation_id}}", username: "{{user.username}}" });
+              msgInput.value = "";
+            }
+          </script>
+        </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>
+
+</div>
+
+
 {% endblock %}
