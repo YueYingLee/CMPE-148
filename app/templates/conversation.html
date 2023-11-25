@@ -99,73 +99,86 @@
         <div class = "user-list">
             <div class = "user-online">
               <p class = "online user-item">Online</p>
-              <ul id="onlinelist"></ul>
-              <ul id = 'onlinelist'></ul>
-              <script type="text/javascript">
-                var socketio = io.connect("http://192.168.0.195:5000");
+              <div class = online-text>
+                <ul id="onlinelist"></ul>
+                <script type="text/javascript">
+                  var socketio = io.connect("http://192.168.0.195:5000");
 
-                socketio.on('connect', function () {
-                  console.log('Connected to the server');
-                });
+                  /*socketio.on('connect', function () {
+                    console.log('Connected to the server');
+                  });*/
 
-                /*socketio.on('updateUsers',function(data) {
-                  console.log('received updateUsers: ', data);
-                  updateOnlineUsersList(data);
-                });
+                  /*socketio.on('updateUsers',function(data) {
+                    console.log('received updateUsers: ', data);
+                    updateOnlineUsersList(data);
+                  });
 
-                function updateOnlineUsersList(usersData) {
-                  var onlineList = document.getElementById('onlinelist');
-                  onlineList.innerHTML = '';
-
-                  for (var userId in usersData) {
-                    var status = usersData[userId];
-                    console.log('logged: ' + status);
-                    var listItem = document.createElement('li');
-                    listItem.innerText = userId + ' - ' + usersData[userId];
-                    onlineList.appendChild(listItem);
-                  }
-                }*/
-                function get_online_users() {
-                    var userData = {{ connected_users|tojson|safe }};
-                    //var parsedUserData = JSON.parse(userData);
-                    for (var key in userData) {
-                        if (userData.hasOwnProperty(key)) {
-                            console.log('key: ', key, 'value: ', userData[key]);
-                        }
-                    }
-
+                  function updateOnlineUsersList(usersData) {
                     var onlineList = document.getElementById('onlinelist');
                     onlineList.innerHTML = '';
-                    for (var key in userData) {
-                        if (userData.hasOwnProperty(key)) {
+
+                    for (var userId in usersData) {
+                      var status = usersData[userId];
+                      console.log('logged: ' + status);
+                      var listItem = document.createElement('li');
+                      listItem.innerText = userId + ' - ' + usersData[userId];
+                      onlineList.appendChild(listItem);
+                    }
+                  }*/
+                  function get_online_users() {
+                    //convert dictionary to array
+                      var userData = {{ connected_users|tojson|safe }};
+                      //var parsedUserData = JSON.parse(userData);
+
+                      //debugging: check to see if each key-value was passed
+                      for (var key in userData) {
+                          if (userData.hasOwnProperty(key)) {
+                              console.log('key: ', key, 'value: ', userData[key]);
+                          }
+                      }
+                      //add to onlinelist element
+                      var onlineList = document.getElementById('onlinelist');
+                      onlineList.innerHTML = '';
+                      
+                      //logged in user doesn't get passed so i manually add them into the online list
+                      var currUser = document.createElement('li');
+                      currUser.innerText = "{{user.username}}";
+                      currUser.classList.add('online-user');
+                      onlineList.appendChild(currUser);
+
+                      //add each key (username) in the dictionary to the online list
+                      for (var key in userData) {
                           var listItem = document.createElement('li');
                           listItem.innerText = key;
                           listItem.classList.add('online-user');
                           onlineList.appendChild(listItem);
-                        }
+                      }
                     }
-                  }
-                    
-                  get_online_users();
-              </script>
+                      
+                    get_online_users();
+                </script>
+                </div>
             </div>
             <div class = "user-offline">
               <p class = "offline user-item">Offline</p>
+              <div class = "offline-text">
               <ul id="offlinelist"></ul>
               <script type="text/javascript">
+                //similar code as online list above
                 var socketio = io.connect("http://192.168.0.195:5000");
                 function get_offline_users() {
                     var userData = {{ connected_users|tojson|safe }};
                     var offlineList = document.getElementById('offlinelist');
                     offlineList.innerHTML = '';
 
+                    //get string of participants and delimit using comma
                     var participants = "{{participants}}";
                     var userArray = participants.split(',');
-                    console.log(userArray);
 
+                    //compare each participant in the conversation against the users in the connected_users dict
                     for (var i = 0; i < userArray.length; i++) {
-                      if(!(userData.hasOwnProperty(userArray[i]))){
-                        console.log(!(userData.hasOwnProperty(userArray[i])));
+                      //checks if participant is not in the connected_users list; also manually excludes current user
+                      if((!(userData.hasOwnProperty(userArray[i]))) && userArray[i] != "{{user.username}}"){
                         var listItem = document.createElement('li');
                         listItem.innerText = userArray[i];
                         listItem.classList.add('offline-user');
@@ -175,6 +188,7 @@
                 }
                 get_offline_users();
               </script>
+              </div>
             </div>
         </div>
     </div> 

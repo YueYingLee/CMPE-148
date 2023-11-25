@@ -89,6 +89,19 @@
     color:red;
   }
 
+  .user-online, .user-offline {
+    padding: -5, -10;
+  }
+
   .online-user, .offline-user {
     list-style-type:none;
+    
+  }
+
+  .online-text, .offline-text {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    margin: 0 35 0 0;
   }
