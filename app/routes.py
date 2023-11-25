@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request,jsonify
 from flask import redirect, url_for
 from flask import flash, get_flashed_messages
 from flask_login import current_user
@@ -152,7 +152,7 @@ def conversation(conversation_id):
              "message": decrypted_message
          }
          decrypted_messages.append(msg_to_display)
-     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user)
+     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user,connected_users=connected_users)
 
 
 @socketio.on('join_room')
@@ -199,3 +199,26 @@ def handle_message(payload):
     db.session.add(new_message)
     db.session.commit()
     print("MESSAGE SENT")
+
+
+connected_users = {}
+
+@socketio.on('connect')
+def handle_connect():
+    user_id = current_user.username
+    connected_users[user_id] = 'online'
+    print(f'User connected: {user_id}')
+    update_connected_users()
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    user_id = current_user.username
+    del connected_users[user_id]
+    print(f'User disconnected: {user_id}')
+    update_connected_users()
+
+
+def update_connected_users():
+    print('Updating connected users:', connected_users)
+    connected_user_data = {user_id: status for user_id, status in connected_users.items()}
+    socketio.emit('updateUsers', connected_user_data, room='/',namespace='/')

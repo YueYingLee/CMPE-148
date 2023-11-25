@@ -88,3 +88,7 @@
   .offline {
     color:red;
   }
+
+  .online-user, .offline-user {
+    list-style-type:none;
+  }
