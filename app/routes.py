@@ -32,30 +32,6 @@ def get_conversations():
 def index():
     return render_template("index.html")
 
-@myapp_obj.route("/login", methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        valid_user = Users.query.filter_by(username=form.name.data).first()
-        if valid_user != None:
-            if valid_user.check_password(form.password.data) == True:
-                login_user(valid_user)
-                return redirect(url_for("homepage"))
-            else:
-                flash(f"Login failed.")
-        else:
-            flash(f"Login failed.")
-
-    return render_template("login2.html", form=form)
-
-
-@myapp_obj.route("/logout", methods=["GET", "POST"])
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("login"))
-
-
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
     
@@ -75,6 +51,7 @@ def register():
         else:
             flash("Registration failed")
     return render_template("register2.html", registerForm=registerForm)
+
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
