@@ -1,5 +1,4 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -7,46 +6,71 @@
   {% if error %}
   <p id="error">{{error}}</p>
   {% endif %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-  
 
-  <header class="mb-auto">
-    <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Title</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/homepage">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">Sign Out</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" style="margin-left: 2%;" href="#">Title</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  <div class="sidebar">
-    <h3 class="title"> Conversations </h3>
-    <div class="convo-holder">
-      {% for conversation in user_conversations %}
-      <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}">{{conversation.participants}}</a>
-      {% endfor %}
-    </div>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Sign Out</a>
+      </li>
+    </ul>
   </div>
+</nav>
+
+<div class="main">
+  <div class="row">
+    <div class="left col-4">
+      <h3 class="title">Conversations</h3>
+      <hr>
+      <div class="convo-holder">
+        {%for conversation in user_conversations%}
+        <li>
+          <a class="convo-nav-link" href="/conversation/conversation_id={{conversation.conv_id}}"> {{conversation.participants}} </a>
+        </li>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="right col-8">
+      <h1>Hello, {{user.username}}.</h1>
+        <p class="lead">Continue a conversation or create a new conversation below</p>
+        <p class="lead">
+          <form method="POST" novalidate class="search-form" onsubmit="createConversation()">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+              <label for="name" class="form-label"></label>
+              {{form.names.label}}
+              <br> </br>
+              {{form.names}}
+              {% for error in form.names.errors %}
+              <span class="text-danger">[{{ error }}]</span>
+              {% endfor %}
+            </div>
+            <div class="form-group-button mt-3">
+              {{ form.submit(class="btn btn-primary rounded-pill") }}
+            </div>
+          </form>
+        </p>
+        <footer class="mt-auto">
+          <p> <a href="https://github.com/YueYingLee/CMPE-148" style="color: black"> SJSU CMPE148 Project by 3C1S </a>.</p>
+        </footer>
+    </div>
+</div>
+  
+</div>
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -58,41 +82,19 @@
       </ul>
     </div>
     {% endif %}
-  {% endwith %}
+    {% endwith %}
 
-  <script type="text/javascript">
-    function createConversation() {
-      var socketio = io();
-      socketio.emit("create_conversation", { participants: form.names })
-      return false;
-    }
-  </script>
-
-  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <main class="px-3">
-      <h1>Hello, {{user.username}}.</h1>
-      <p class="lead">Continue a conversation or create a new conversation below</p>
-      <p class="lead">
-        <form method="POST" novalidate class="search-form" onsubmit="createConversation()">
-          {{ form.hidden_tag() }}
-          <div class="form-group">
-            <label for="name" class="form-label"></label>
-            {{form.names.label}}
-            {{form.names}}
-            {% for error in form.names.errors %}
-            <span class="text-danger">[{{ error }}]</span>
-            {% endfor %}
-          </div>
-          <div class="form-group-button">
-            {{ form.submit(class="btn btn-primary rounded-pill") }}
-          </div>
-        </form>
-      </p>
-    </main>
-
-    <footer class="mt-auto">
-      <p> <a href="https://github.com/YueYingLee/CMPE-148" style="color: white"> @SJSU CMPE148 Project by 3C1S </a>.</p>
-    </footer>
-  </div>
+    <script type="text/javascript">
+      function createConversation(){
+        var socketio = io();
+        socketio.emit("create_conversation", {participants: form.names} )
+        return false;
+      }
+    </script>
+    </div>
+    
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </div>
 {% endblock %}

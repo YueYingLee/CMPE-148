@@ -1,14 +1,58 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.main {
+  background: linear-gradient(60deg, #e2e2e2, #c9d6ff);
+}
+
+.title{
+  padding: 4%;
+  text-align: center;
+}
+
+.left {
+  min-height: 93vh;
+  background: linear-gradient(60deg, rgb(202, 119, 193), #378fb7);  
+  text-align: center;
+}
+
+.convo-holder{
+  text-align: center;
+  list-style-type: none;
+}
+
+.convo-nav-link {
+  text-decoration: none;
+  color: white;
+}
+
+hr {
+  border: 2px solid white; /* Change the color and style as needed */
+  margin: 1%;
+  width: 100%;
+}
+
+h3 {
+  margin-top: 1%;
+}
+
 #conversation{
-  position: relative;
-  left: 250px;
+  /* position: relative; */
+  /* left: 250px; */
+  display: flex;
+  align-items: center;
+  background: linear-gradient(60deg, #e2e2e2, #c9d6ff);
+  color: black;
 }
 .message-container {
     width: 50%;
     height: 80%; 
+    background-color: #ffffff;
     border: 1px solid #ccc;
-    background-color: #36383e;
+    border-radius: 30px;
+    padding: 3%;
     overflow-y: auto; 
-    
   }
   
   .message {
@@ -34,26 +78,14 @@
 
 #message-box{
   margin-top: 10px;
-  max-width:610px;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
 }
 
 #message-input{
-  width: 66%;
+  width: 91%;
 }
-
-.sidebar {
-  margin-top: 40px;
-  height: 100%;
-  width: 20%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #36393e;
-  border-right: 2px solid white;
-  overflow-y: auto;
-  max-width:200px;
-  }
-
   .title{
     margin-top: 15px;
     text-align: center;
