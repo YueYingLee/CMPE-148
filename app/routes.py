@@ -83,18 +83,19 @@ def logout():
 @login_required
 def delete_account():
     deleteForm=deleteAcc()
-    if current_user.is_authenticated:
-        # Delete the user from the database
-        db.session.delete(current_user)
-        db.session.commit()
-
-        # Log the user out after deleting the account
-        logout_user()
+    if deleteForm.validate_on_submit() and request.method == "POST":
+        user = current_user
+        if current_user.is_authenticated:
+            # Delete the user from the database
+            db.session.delete(user)
+            db.session.commit()
+            # Log the user out after deleting the account
+            flash("Sorry to see you leaving. :(\n")
+            logout_user()
+            flash("Your account has been deleted.")
+            return redirect(url_for("register"))
         
-        flash("Your account has been deleted.")
-        return redirect(url_for("login"))
-
-    return render_template("delete_account.html", deleteForm=deleteForm)
+    return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
 
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])

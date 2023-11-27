@@ -8,15 +8,17 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_account.css') }}">
-   <title>Index Page</title>
+   <title>Delete Account Page</title>
 </head>
 
 {% block content %}
-
 <div>
-            <h5 class="card-title">Want to delete your account?</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Note: This will PERMANENTLY delete your account.</h6>
-                <form action="{{url_for('profile')}}" method="POST" novalidate id="dform">
+     <div style="text-align: center;">
+        <div class = "cards">
+            <h1>Want to delete your account?</h1>
+                <br> </br>
+                <h2>Note: This will PERMANENTLY delete your account.</h2>
+                <form action="{{url_for('delete_account')}}" method="POST" novalidate id="deleteForm">
                     {{deleteForm.hidden_tag()}}
                     <p>{{deleteForm.password.label}} {{deleteForm.password(size=32, class="form-control")}}</p>
                     {% for error in deleteForm.password.errors %}
@@ -24,7 +26,9 @@
                     {% endfor %}
                     <p>{{deleteForm.submit(class="btn btn-danger")}}</p>
                 </form>
-            </div>
+         </div>
+    </div>
+</div>
         
 {% endblock %}
 

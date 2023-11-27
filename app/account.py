@@ -12,5 +12,5 @@ class deleteAcc(FlaskForm):
     submit = SubmitField('Delete Account')
 
     def validate_password(self, form):
-        if not check_password_hash(current_user.password, form.data):
+        if not check_password_hash(current_user.password_hash, form.data):
             raise ValidationError('Incorrect password!')
