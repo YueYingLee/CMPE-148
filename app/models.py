@@ -47,6 +47,7 @@ list in the backend if you need to.
 class Conversations(db.Model):
     conv_id = db.Column(db.Integer, primary_key=True)
     participants = db.Column(db.String(256))
+   # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self): #for debugging process
         return f'<Conversations {self.conv_id}, {self.participants}: >'
 

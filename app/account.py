@@ -8,7 +8,7 @@ from wtforms.widgets import TextArea
 
 
 class deleteAcc(FlaskForm):
-    password = PasswordField('Enter your password', validators=[DataRequired()])
+    password = PasswordField('Enter your password', validators=[DataRequired()],  render_kw ={"placeholder":"Password"})
     submit = SubmitField('Delete Account')
 
     def validate_password(self, form):

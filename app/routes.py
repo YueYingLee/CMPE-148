@@ -84,8 +84,8 @@ def logout():
 def delete_account():
     deleteForm=deleteAcc()
     if deleteForm.validate_on_submit() and request.method == "POST":
-        user = current_user
-        if current_user.is_authenticated:
+        user = current_user 
+        if current_user.is_authenticated:                
             # Delete the user from the database
             db.session.delete(user)
             db.session.commit()
@@ -94,7 +94,7 @@ def delete_account():
             logout_user()
             flash("Your account has been deleted.")
             return redirect(url_for("register"))
-        
+
     return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
 
 
