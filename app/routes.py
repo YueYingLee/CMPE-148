@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request,jsonify
 from flask import redirect, url_for
 from flask import flash, get_flashed_messages
 from flask_login import current_user
@@ -11,6 +11,7 @@ from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.account import deleteAcc
 from app.login import LoginForm
+from app.resetpassword import ResetForm
 from sqlalchemy import desc
 from app.user_search import UserForm
 from datetime import datetime
@@ -32,6 +33,8 @@ def get_conversations():
 @myapp_obj.route("/")
 def index():
     return render_template("index.html")
+
+
 
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
@@ -170,7 +173,7 @@ def conversation(conversation_id):
              "message": decrypted_message
          }
          decrypted_messages.append(msg_to_display)
-     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user)
+     return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user,connected_users=connected_users)
 
 
 @socketio.on('join_room')
@@ -217,3 +220,26 @@ def handle_message(payload):
     db.session.add(new_message)
     db.session.commit()
     print("MESSAGE SENT")
+
+
+connected_users = {}
+
+@socketio.on('connect')
+def handle_connect():
+    user_id = current_user.username
+    connected_users[user_id] = 'online'
+    print(f'User connected: {user_id}')
+    update_connected_users()
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    user_id = current_user.username
+    del connected_users[user_id]
+    print(f'User disconnected: {user_id}')
+    update_connected_users()
+
+
+def update_connected_users():
+    print('Updating connected users:', connected_users)
+    connected_user_data = {user_id: status for user_id, status in connected_users.items()}
+    socketio.emit('updateUsers', connected_user_data, room='/',namespace='/')

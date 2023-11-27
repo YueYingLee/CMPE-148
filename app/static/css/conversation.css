@@ -3,7 +3,7 @@
   left: 250px;
 }
 .message-container {
-    width: 70%;
+    width: 50%;
     height: 80%; 
     border: 1px solid #ccc;
     background-color: #36383e;
@@ -24,6 +24,7 @@
     justify-content: left;
     align-items: left;
     height: 100vh; 
+    flex-wrap:wrap;
 }
 
 .mb-auto{
@@ -33,6 +34,7 @@
 
 #message-box{
   margin-top: 10px;
+  max-width:610px;
 }
 
 #message-input{
@@ -49,6 +51,7 @@
   background-color: #36393e;
   border-right: 2px solid white;
   overflow-y: auto;
+  max-width:200px;
   }
 
   .title{
@@ -58,4 +61,47 @@
   
   .convo-holder{
     text-align: center;
+  }
+
+  .msg {
+    max-width:500px;
+  }
+
+  .title-header {
+    width: 50%;
+  }
+
+  .user-list {
+    border: 1px solid white;
+    margin: 1 350 0 50;
+    min-width:200px;
+    display:flex;
+    flex-direction:column;
+  }
+  .user-item {
+    border: 1px solid white;
+  }
+  .online {
+    color:lime;
+  }
+
+  .offline {
+    color:red;
+  }
+
+  .user-online, .user-offline {
+    padding: -5, -10;
+  }
+
+  .online-user, .offline-user {
+    list-style-type:none;
+    
+  }
+
+  .online-text, .offline-text {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    margin: 0 35 0 0;
   }
