@@ -10,7 +10,6 @@ from datetime import datetime
 from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.login import LoginForm
-from app.resetpassword import ResetForm
 from sqlalchemy import desc
 from app.user_search import UserForm
 from datetime import datetime
@@ -48,17 +47,7 @@ def login():
             flash(f"Login failed.")
 
     return render_template("login2.html", form=form)
-'''
-@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
-def reset_password():
-    form = ResetForm()
-    if form.validate_on_submit():
-        valid_user = Users.query.filter_by(username=form.username.data).first()
-        if valid_user:
-            reset_password(valid_user,form.password.data)
-        else:
-            flash("That user does not exist")
-    return render_template("resetpassword.html", form=form)'''
+
 
 @myapp_obj.route("/logout", methods=["GET", "POST"])
 @login_required
