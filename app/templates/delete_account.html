@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_account.css') }}">
+   <title>Index Page</title>
+</head>
+
+{% block content %}
+
+<div>
+            <h5 class="card-title">Want to delete your account?</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Note: This will PERMANENTLY delete your account.</h6>
+                <form action="{{url_for('profile')}}" method="POST" novalidate id="dform">
+                    {{deleteForm.hidden_tag()}}
+                    <p>{{deleteForm.password.label}} {{deleteForm.password(size=32, class="form-control")}}</p>
+                    {% for error in deleteForm.password.errors %}
+                        <span class="text-danger">[{{ error }}]</span>
+                    {% endfor %}
+                    <p>{{deleteForm.submit(class="btn btn-danger")}}</p>
+                </form>
+            </div>
+        
+{% endblock %}
+
+

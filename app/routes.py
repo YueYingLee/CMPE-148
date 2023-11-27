@@ -9,6 +9,7 @@ from flask_socketio import join_room, leave_room, send, SocketIO
 from datetime import datetime
 from app.models import Users, Conversations, Messages
 from app.register import registerUser
+from app.account import deleteAcc
 from app.login import LoginForm
 from sqlalchemy import desc
 from app.user_search import UserForm
@@ -51,6 +52,46 @@ def register():
         else:
             flash("Registration failed")
     return render_template("register2.html", registerForm=registerForm)
+
+@myapp_obj.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        valid_user = Users.query.filter_by(username=form.name.data).first()
+        if valid_user != None:
+            if valid_user.check_password(form.password.data) == True:
+                login_user(valid_user)
+                return redirect(url_for("homepage"))
+            else:
+                flash(f"Login failed.")
+        else:
+            flash(f"Login failed.")
+
+    return render_template("login2.html", form=form)
+
+@myapp_obj.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
+@myapp_obj.route("/delete_account", methods=["GET", "POST"])
+@login_required
+def delete_account():
+    deleteForm=deleteAcc()
+    if current_user.is_authenticated:
+        # Delete the user from the database
+        db.session.delete(current_user)
+        db.session.commit()
+
+        # Log the user out after deleting the account
+        logout_user()
+        
+        flash("Your account has been deleted.")
+        return redirect(url_for("login"))
+
+    return render_template("delete_account.html", deleteForm=deleteForm)
 
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
