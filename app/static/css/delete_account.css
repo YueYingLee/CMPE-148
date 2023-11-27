@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+
+* {
+    
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
+  }
+
+.cards{
+  width:100%;
+  background-color: rgb(241, 231, 231);
+  border-radius: 80px;
+  margin:40px;
+  box-shadow: 2px 2px 10px rgb(60, 58, 58);
+}
+.image img{
+     border-top-right-radius: 80px;
+     border-top-left-radius: 80px;
+     border-bottom-left-radius: 80px;
+     border-bottom-right-radius: 80px;
+}
