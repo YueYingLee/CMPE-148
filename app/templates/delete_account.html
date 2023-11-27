@@ -15,9 +15,8 @@
 <div>
      <div style="text-align: center;">
         <div class = "cards">
-            <h1>Want to delete your account?</h1>
+            <h1>Permanntly delete your account?</h1>
                 <br> </br>
-                <h2>Note: This will PERMANENTLY delete your account.</h2>
                 <form action="{{url_for('delete_account')}}" method="POST" novalidate id="deleteForm">
                     {{deleteForm.hidden_tag()}}
                     <p>{{deleteForm.password.label}} {{deleteForm.password(size=32, class="form-control")}}</p>
