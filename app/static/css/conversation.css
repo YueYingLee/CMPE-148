@@ -46,7 +46,7 @@ h3 {
   color: black;
 }
 .message-container {
-    width: 70%;
+    width: 50%;
     height: 80%; 
     background-color: #ffffff;
     border: 1px solid #ccc;
@@ -68,6 +68,7 @@ h3 {
     justify-content: left;
     align-items: left;
     height: 100vh; 
+    flex-wrap:wrap;
 }
 
 .mb-auto{
@@ -92,4 +93,47 @@ h3 {
   
   .convo-holder{
     text-align: center;
+  }
+
+  .msg {
+    max-width:500px;
+  }
+
+  .title-header {
+    width: 50%;
+  }
+
+  .user-list {
+    border: 1px solid white;
+    margin: 1 350 0 50;
+    min-width:200px;
+    display:flex;
+    flex-direction:column;
+  }
+  .user-item {
+    border: 1px solid white;
+  }
+  .online {
+    color:lime;
+  }
+
+  .offline {
+    color:red;
+  }
+
+  .user-online, .user-offline {
+    padding: -5, -10;
+  }
+
+  .online-user, .offline-user {
+    list-style-type:none;
+    
+  }
+
+  .online-text, .offline-text {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    margin: 0 35 0 0;
   }

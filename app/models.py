@@ -29,7 +29,12 @@ class Users(db.Model, UserMixin):
     
     def __repr__(self): #for debugging process
         return f'<user {self.user_id}: {self.username}>'
-
+    '''
+    def reset_password(username,new_password):
+        reset = Users.query.filter_by(username=username).first()
+        reset.password_hash = generate_password_hash(new_password)
+        db.session.commit()'''
+    
 """
 Conversation relations
 
