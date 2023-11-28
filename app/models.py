@@ -51,7 +51,6 @@ class Conversations(db.Model):
    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self): #for debugging process
         return f'<Conversations {self.conv_id}, {self.participants}: >'
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 """
 Messages relation 
@@ -64,7 +63,6 @@ msg_content -> the actual content of the message. 1024 character limit
 """
 class Messages(db.Model):
     msg_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sender_name = db.Column(db.String(20), db.ForeignKey(Users.username)) 
     conversation_id = db.Column(db.Integer, db.ForeignKey(Conversations.conv_id))
     timestamp = db.Column(db.DateTime, default=datetime.timezone.utc)

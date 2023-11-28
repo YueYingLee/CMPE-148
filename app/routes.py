@@ -94,9 +94,10 @@ def delete_account():
     if deleteForm.validate_on_submit() and request.method == "POST":
         user = current_user 
         if current_user.is_authenticated:       
-            deleteMsg = Messages.query.filter_by(user=current_user).all()
-            for msg in deleteMsg:
-                delete_msg(msg.id)         
+            # Delete associated messages
+            messages_to_delete = Messages.query.filter_by(sender_name=current_user.username).all()
+            for message in messages_to_delete:
+                db.session.delete(message)
             # Delete the user from the database
             db.session.delete(user)
             db.session.commit()
