@@ -172,9 +172,9 @@ justify-content: center;
     right: 0;
     color: white;
     background: linear-gradient(to right, #e2e2e2, #c9d6ff);
-    width: 100%;
+    width: 110%;
     height: 40%;
-    animation: typing 4s steps(20) alternate infinite,
+    animation: typing 4s steps(30) alternate infinite,
                 line 2s infinite;
 }
 @keyframes typing{
