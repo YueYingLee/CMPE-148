@@ -173,7 +173,7 @@ justify-content: center;
     color: white;
     background: linear-gradient(to right, #e2e2e2, #c9d6ff);
     width: 110%;
-    height: 40%;
+    height: 60%;
     animation: typing 4s steps(30) alternate infinite,
                 line 2s infinite;
 }
@@ -192,7 +192,7 @@ justify-content: center;
 
  .button_slide {
     color: #0e0d0d;
-    border: 2px solid rgb(40, 66, 124);
+    border: 2px solid rgb(40, 66, 124); 
     border-radius: 5px;
     padding: 18px 36px;
     display: inline-block;

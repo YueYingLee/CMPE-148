@@ -79,22 +79,28 @@ def logout():
     return redirect(url_for("login"))
 
 
+
 @myapp_obj.route("/delete_account", methods=["GET", "POST"])
 @login_required
 def delete_account():
     deleteForm=deleteAcc()
     if deleteForm.validate_on_submit() and request.method == "POST":
-        user = current_user
-        if current_user.is_authenticated:
+        user = current_user 
+        if current_user.is_authenticated:       
+            # Delete associated messages
+            messages_to_delete = Messages.query.filter_by(sender_name=current_user.username).all()
+            for message in messages_to_delete:
+                db.session.delete(message)
             # Delete the user from the database
             db.session.delete(user)
             db.session.commit()
             # Log the user out after deleting the account
             flash("Sorry to see you leaving. :(\n")
             logout_user()
+            
             flash("Your account has been deleted.")
             return redirect(url_for("register"))
-        
+
     return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
 
 
