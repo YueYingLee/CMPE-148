@@ -8,10 +8,16 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_account.css') }}">
+  
    <title>Delete Account Page</title>
 </head>
 
 {% block content %}
+<style>
+  a {
+    text-decoration: none;
+  }
+  </style>
 <div>
      {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -26,6 +32,7 @@
     {% endwith %}
      <div style="text-align: center;">
         <div class = "cards">
+            <div class ="image">
             <h1>Permanently delete your account?</h1>
                 <br> </br>
                 <form action="{{url_for('delete_account')}}" method="POST" novalidate id="deleteForm">
@@ -34,15 +41,20 @@
                     {% for error in deleteForm.password.errors %}
                         <span class="text-danger">[{{ error }}]</span>
                     {% endfor %}
-                    <p>{{deleteForm.submit(class="btn btn-danger")}}</p>
+                    <p>{{deleteForm.submit(class="btn btn-primary rounded-pill", style="background-color: red; color: white;")}}</p>
                 </form>
-                 <li class="nav-item">
-                <a class="nav-link" href="/homepage">Home</a>
-              </li>
          </div>
+         
     </div>
+     
 </div>
+
+
+<div id="outer">
+  <a href="/homepage" class="btn-like2"  role="button"> Quit</a>
+</div> 
         
 {% endblock %}
+
 
 
