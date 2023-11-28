@@ -8,6 +8,7 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_account.css') }}">
+  
    <title>Delete Account Page</title>
 </head>
 
@@ -29,7 +30,7 @@
                     {% for error in deleteForm.password.errors %}
                         <span class="text-danger">[{{ error }}]</span>
                     {% endfor %}
-                    <p>{{deleteForm.submit(class="btn btn-primary rounded-pill")}}</p>
+                    <p>{{deleteForm.submit(class="btn btn-primary rounded-pill", style="background-color: red; color: white;")}}</p>
                 </form>
                 </div>
          </div>
@@ -39,5 +40,6 @@
 </div>
         
 {% endblock %}
+
 
 

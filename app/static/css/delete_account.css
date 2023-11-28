@@ -62,7 +62,7 @@ justify-content: center;
 .btn-like {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #d1dfe3;
+    background-color: red;
     color: #ffffff;
     text-align: center;
     text-decoration: none;
