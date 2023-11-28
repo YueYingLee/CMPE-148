@@ -78,7 +78,14 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-
+@myapp_obj.route("/conversations/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def delete_msg(id):
+    msgs = Messages.query.filter(msg.id == id).all()
+    for msg in msgs:
+        db.session.delete(msg)
+        db.session.commit()
+    return redirect(url_for('register'))
 
 @myapp_obj.route("/delete_account", methods=["GET", "POST"])
 @login_required
@@ -86,7 +93,10 @@ def delete_account():
     deleteForm=deleteAcc()
     if deleteForm.validate_on_submit() and request.method == "POST":
         user = current_user 
-        if current_user.is_authenticated:                
+        if current_user.is_authenticated:       
+            deleteMsg = Messages.query.filter_by(user=current_user).all()
+            for msg in deleteMsg:
+                delete_msg(msg.id)         
             # Delete the user from the database
             db.session.delete(user)
             db.session.commit()
