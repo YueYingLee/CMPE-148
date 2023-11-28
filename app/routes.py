@@ -79,6 +79,7 @@ def logout():
     return redirect(url_for("login"))
 
 
+
 @myapp_obj.route("/delete_account", methods=["GET", "POST"])
 @login_required
 def delete_account():
@@ -92,11 +93,11 @@ def delete_account():
             # Log the user out after deleting the account
             flash("Sorry to see you leaving. :(\n")
             logout_user()
+            
             flash("Your account has been deleted.")
             return redirect(url_for("register"))
         
     return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
-
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
