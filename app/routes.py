@@ -90,7 +90,7 @@ def delete_account():
             # Delete associated messages
             messages_to_delete = Messages.query.filter_by(sender_name=current_user.username).all()
             for message in messages_to_delete:
-                db.session.delete(message)
+                message.sender_name = "DeletedUser"
             # Delete the user from the database
             db.session.delete(user)
             db.session.commit()
@@ -231,6 +231,7 @@ def handle_message(payload):
 
 connected_users = {}
 
+"""
 @socketio.on('connect')
 def handle_connect():
     user_id = current_user.username
@@ -244,7 +245,7 @@ def handle_disconnect():
     del connected_users[user_id]
     print(f'User disconnected: {user_id}')
     update_connected_users()
-
+"""
 
 def update_connected_users():
     print('Updating connected users:', connected_users)
