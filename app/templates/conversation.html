@@ -84,20 +84,6 @@
           {% endwith %}
 
 
-          <div class="message-container" id="messages">
-            {%for message in decrypted_messages%}
-            <script type="text/javascript">
-              createChatItem("{{message['message']}}", "{{message['sender_name']}}", "{{message['timestamp']}}")
-            </script>
-            {% endfor %}
-          </div>
-
-
-          <div id="message-box">
-            <input type="text" placeholder="Enter your message" id="message-input" name="message" />
-            <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
-          </div>
-
           <script type="text/javascript">
             var socketio = io.connect("http://10.0.0.196:5000")
             //var socketio = io();
@@ -121,6 +107,18 @@
             }
 
           </script>
+        <div class="message-container" id="messages">
+          {%for message in decrypted_messages%}
+          <script type="text/javascript">
+            createChatItem("{{message['message']}}", "{{message['sender_name']}}", "{{message['timestamp']}}")
+          </script>
+          {% endfor %}
+        </div>
+
+        <div id="message-box">
+          <input type="text" placeholder="Enter your message" id="message-input" name="message" />
+          <button type="submit" id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
       <script type="text/javascript">
         function sendMessage() {
           //getting message input
