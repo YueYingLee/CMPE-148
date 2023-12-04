@@ -245,9 +245,10 @@ def handle_disconnect():
     del connected_users[user_id]
     print(f'User disconnected: {user_id}')
     update_connected_users()
-"""
+
 
 def update_connected_users():
     print('Updating connected users:', connected_users)
     connected_user_data = {user_id: status for user_id, status in connected_users.items()}
     socketio.emit('updateUsers', connected_user_data, room='/',namespace='/')
+"""
