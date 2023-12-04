@@ -103,7 +103,7 @@ h3 {
     width: 50%;
   }
 
-  .user-list {
+  .activity-list, .user-list {
     border: 1px solid white;
     margin: 1 350 0 50;
     min-width:200px;
@@ -136,4 +136,11 @@ h3 {
     justify-content:center;
     align-items:center;
     margin: 0 35 0 0;
+  }
+  .activity-title {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding: 10 0 0 0;
   }

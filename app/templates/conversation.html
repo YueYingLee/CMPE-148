@@ -85,10 +85,11 @@
 
 
           <script type="text/javascript">
-            var socketio = io.connect("http://192.168.0.35:5000")
+            var socketio = io.connect("http://127.0.0.1:5000")
 
-            socketio.on('connect', function() {
+            socketio.on('connect', function(message) {
               console.log("CONNECTED")
+              getActivity(message);
             })
 
             //var socketio = io();
@@ -99,6 +100,7 @@
 
             socketio.on("message", function (message) {
               createChatItem(message['message'], message['sender_name'], message['timestamp'])
+              updateActivity(message);
             })
 
             function createChatItem(message, sender, timestamp) {
@@ -136,8 +138,61 @@
           msgInput.value = "";
         }
       </script>
-      
-        <div class = "user-list">
+        <div class = "activity-list">
+          <p class = "activity-title user-item"><strong>Activity</strong></p>
+          <ul class = "activity-detail"></ul>
+        </div>
+        <script>
+            function updateActivity(message) {
+              var currentdate = new Date(); 
+              var datetime = currentdate.getFullYear() + "/"
+                + (currentdate.getMonth()+1) + "/"
+                + currentdate.getDate() + " " 
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+              var str = message['timestamp'].replace(/-/g,'/');
+
+
+
+              console.log(str);
+              console.log(datetime);
+              var diff = Math.abs(new Date(datetime) - new Date(str));
+              console.log(diff/60000);
+              for (var user in message){
+                console.log(message['timestamp']);
+              }
+            }
+            function getActivity(message){//change argument to check each user
+              var activity = document.getElementById("activity-detail");
+              console.log("hello");
+              for(user in message)
+              {
+                var user = document.createElement('li');
+                currUser.innerText = message['sender_name'] + "\nLast active:" + checkTime(message['timestamp']);
+                currUser.classList.add('activity-item');
+                onlineList.appendChild(activity);
+              }
+            }
+            function checkTime(message)
+            {
+              var currentdate = new Date(); 
+              var datetime = currentdate.getFullYear() + "/"
+                + (currentdate.getMonth()+1) + "/"
+                + currentdate.getDate() + " " 
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+              var str = message.replace(/-/g,'/');
+
+              var diff = Math.abs(new Date(datetime) - new Date(str));
+              console.log(diff);
+              for (var user in message){
+                console.log(message['timestamp']);
+              }
+            }
+        </script>
+        <!--<div class = "user-list">
            <div class = "user-online">
                <p class = "online user-item">Online</p>
               <div class = online-text>
@@ -149,7 +204,10 @@
               <div class = "offline-text">
               <ul id="offlinelist"></ul>
                 <script type="text/javascript">
-                  var socketio = io.connect("http://10.0.0.196:5000");
+
+
+
+                  var socketio = io.connect("http://127.0.0.1:5000");
 
                   socketio.on('connect', function () {
                     console.log('Connected to the server');
@@ -227,7 +285,7 @@
                 </script>
               </div>
             </div>
-         </div>
+         </div>-->
     </div>  
  
 

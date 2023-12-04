@@ -208,7 +208,7 @@ def conversation(conversation_id):
          msg_to_display = {
              "sender_name": message.sender_name, 
              "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S"), 
-             "message": decrypted_message
+             "message": decrypted_message,
          }
          decrypted_messages.append(msg_to_display)
      return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user,connected_users=connected_users)
@@ -249,7 +249,7 @@ def handle_message(payload):
     display_message = {
         'message': decrypted_message,
         'sender_name': new_message.sender_name,
-        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
 
     }
     room = str(payload["conversation_id"])
