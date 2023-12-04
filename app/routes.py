@@ -11,7 +11,6 @@ from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.account import deleteAcc
 from app.login import LoginForm
-from app.resetpassword import ResetForm
 from sqlalchemy import desc
 from app.user_search import UserForm
 from datetime import datetime
@@ -33,8 +32,40 @@ def get_conversations():
 @myapp_obj.route("/")
 def index():
     return render_template("index.html")
+'''
+@myapp_obj.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        valid_user = Users.query.filter_by(username=form.name.data).first()
+        if valid_user != None:
+            if valid_user.check_password(form.password.data) == True:
+                login_user(valid_user)
+                return redirect(url_for("homepage"))
+            else:
+                flash(f"Login failed.")
+        else:
+            flash(f"Login failed.")
 
+    return render_template("login2.html", form=form)
 
+@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
+def reset_password():
+    form = ResetForm()
+    if form.validate_on_submit():
+        valid_user = Users.query.filter_by(username=form.username.data).first()
+        if valid_user:
+            reset_password(valid_user,form.password.data)
+        else:
+            flash("That user does not exist")
+    return render_template("resetpassword.html", form=form)
+
+@myapp_obj.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+'''
 
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
