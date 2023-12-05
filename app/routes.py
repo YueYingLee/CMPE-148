@@ -11,7 +11,7 @@ from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.account import deleteAcc
 from app.login import LoginForm
-from app.resetpassword import ResetForm
+from app.reset import ResetForm
 from sqlalchemy import desc
 from app.user_search import UserForm
 from datetime import datetime
@@ -33,6 +33,43 @@ def get_conversations():
 @myapp_obj.route("/")
 def index():
     return render_template("index.html")
+'''
+@myapp_obj.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        valid_user = Users.query.filter_by(username=form.name.data).first()
+        if valid_user != None:
+            if valid_user.check_password(form.password.data) == True:
+                login_user(valid_user)
+                return redirect(url_for("homepage"))
+            else:
+                flash(f"Login failed.")
+        else:
+            flash(f"Login failed.")
+
+    return render_template("login2.html", form=form)
+
+@myapp_obj.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))    
+'''
+@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
+def reset_password():
+    resetForm = ResetForm()
+    if resetForm.validate_on_submit():
+        valid_user = Users.query.filter_by(username=resetForm.username.data).first()
+        if valid_user:
+            valid_user.set_password(resetForm.password.data)
+            db.session.add(valid_user)
+            db.session.commit()
+            return redirect("/login")
+        else:
+            flash("That user does not exist")
+    return render_template("reset.html", resetForm=resetForm)
+
 
 
 
@@ -177,7 +214,7 @@ def conversation(conversation_id):
          msg_to_display = {
              "sender_name": message.sender_name, 
              "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S"), 
-             "message": decrypted_message
+             "message": decrypted_message,
          }
          decrypted_messages.append(msg_to_display)
      return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user,connected_users=connected_users)
@@ -218,7 +255,7 @@ def handle_message(payload):
     display_message = {
         'message': decrypted_message,
         'sender_name': new_message.sender_name,
-        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
 
     }
     room = str(payload["conversation_id"])
@@ -245,9 +282,10 @@ def handle_disconnect():
     del connected_users[user_id]
     print(f'User disconnected: {user_id}')
     update_connected_users()
-"""
+
 
 def update_connected_users():
     print('Updating connected users:', connected_users)
     connected_user_data = {user_id: status for user_id, status in connected_users.items()}
     socketio.emit('updateUsers', connected_user_data, room='/',namespace='/')
+"""
