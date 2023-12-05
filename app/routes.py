@@ -11,7 +11,7 @@ from app.models import Users, Conversations, Messages
 from app.register import registerUser
 from app.account import deleteAcc
 from app.login import LoginForm
-from app.resetpassword import ResetForm
+from app.reset import ResetForm
 from sqlalchemy import desc
 from app.user_search import UserForm
 from datetime import datetime
@@ -34,11 +34,8 @@ def get_conversations():
 def index():
     return render_template("index.html")
 
-
-
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
-    
     registerForm = registerUser()
     if registerForm.validate_on_submit():
         same_Username = Users.query.filter_by(
@@ -48,7 +45,7 @@ def register():
             user = Users()
             user.username = registerForm.username.data
             user.set_password(registerForm.password.data)
-
+            #add user to the database
             db.session.add(user)
             db.session.commit()
             return redirect("/login")
@@ -69,16 +66,13 @@ def login():
                 flash(f"Login failed.")
         else:
             flash(f"Login failed.")
-
     return render_template("login2.html", form=form)
 
 @myapp_obj.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
-
-
+    return redirect(url_for("login")) 
 
 @myapp_obj.route("/delete_account", methods=["GET", "POST"])
 @login_required
@@ -97,12 +91,24 @@ def delete_account():
             # Log the user out after deleting the account
             flash("Sorry to see you leaving. :(\n")
             logout_user()
-            
             flash("Your account has been deleted.")
             return redirect(url_for("register"))
 
     return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
 
+@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
+def reset_password():
+    resetForm = ResetForm()
+    if resetForm.validate_on_submit():
+        valid_user = Users.query.filter_by(username=resetForm.username.data).first()
+        if valid_user:
+            valid_user.set_password(resetForm.password.data)
+            db.session.add(valid_user)
+            db.session.commit()
+            return redirect("/login")
+        else:
+            flash("That user does not exist")
+    return render_template("reset.html", resetForm=resetForm)
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
@@ -177,7 +183,7 @@ def conversation(conversation_id):
          msg_to_display = {
              "sender_name": message.sender_name, 
              "timestamp": message.timestamp.strftime("%Y-%m-%d %H:%M:%S"), 
-             "message": decrypted_message
+             "message": decrypted_message,
          }
          decrypted_messages.append(msg_to_display)
      return render_template("conversation.html", decrypted_messages = decrypted_messages, conversation_id = conversation_id, participants = participants, user_conversations = user_conversations, user = user,connected_users=connected_users)
@@ -218,7 +224,7 @@ def handle_message(payload):
     display_message = {
         'message': decrypted_message,
         'sender_name': new_message.sender_name,
-        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": new_message.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
 
     }
     room = str(payload["conversation_id"])
@@ -245,9 +251,10 @@ def handle_disconnect():
     del connected_users[user_id]
     print(f'User disconnected: {user_id}')
     update_connected_users()
-"""
+
 
 def update_connected_users():
     print('Updating connected users:', connected_users)
     connected_user_data = {user_id: status for user_id, status in connected_users.items()}
     socketio.emit('updateUsers', connected_user_data, room='/',namespace='/')
+"""
