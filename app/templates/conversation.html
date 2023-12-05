@@ -100,7 +100,7 @@
 
             socketio.on("message", function (message) {
               createChatItem(message['message'], message['sender_name'], message['timestamp'])
-              updateActivity(message['sender_name'],message['timestamp']);
+              //updateActivity(message['sender_name'],message['timestamp']);
             })
 
             function createChatItem(message, sender, timestamp) {
@@ -147,23 +147,26 @@
         </div>
         <script>
             function updateActivity(sender,time) {
-              var remove = document.getElementsById(sender);
-              while(remove)
+              if(sender != "{{user.username}}")
               {
-                remove.parentNode.removeChild(remove);
+                var remove = document.getElementById(sender);
+                while(remove)
+                {
+                  remove.parentNode.removeChild(remove);
+                }
+                var activity = document.getElementById("activity");
+
+                var nameRecord = document.createElement('li');
+                nameRecord.innerText = sender;
+                nameRecord.classList.add('name-record', sender);
+                activity.appendChild(nameRecord);
+
+                var timeRecord = document.createElement('li');
+                timeRecord.innerText = "Last seen: " + checkTime(time);
+                timeRecord.classList.add('time-record', sender);
+                activity.appendChild(timeRecord);
+                console.log("delete");
               }
-              var activity = document.getElementById("activity");
-
-              var nameRecord = document.createElement('li');
-              nameRecord.innerText = sender;
-              nameRecord.classList.add('name-record', sender);
-              activity.appendChild(nameRecord);
-
-              var timeRecord = document.createElement('li');
-              timeRecord.innerText = "Last seen: " + checkTime(time);
-              timeRecord.classList.add('time-record', sender);
-              activity.appendChild(timeRecord);
-
             }
 
             function getActivity(){//change argument to check each user
@@ -188,15 +191,18 @@
                   }
                 }
                 //add name and recent time to list
-                var nameRecord = document.createElement('li');
-                nameRecord.innerText = namesList[i];
-                nameRecord.classList.add('name-record', namesList[i]);
-                activity.appendChild(nameRecord);
+                if(namesList[i] != "{{user.username}}")
+                {
+                  var nameRecord = document.createElement('li');
+                  nameRecord.innerText = namesList[i];
+                  nameRecord.classList.add('name-record', namesList[i]);
+                  activity.appendChild(nameRecord);
 
-                var timeRecord = document.createElement('li');
-                timeRecord.innerText = "Last seen: " + checkTime(timestamps);
-                timeRecord.classList.add('time-record', namesList[i]);
-                activity.appendChild(timeRecord);
+                  var timeRecord = document.createElement('li');
+                  timeRecord.innerText = "Last seen: " + checkTime(timestamps);
+                  timeRecord.classList.add('time-record', namesList[i]);
+                  activity.appendChild(timeRecord);
+                }
               }
             }
             function checkTime(message)
@@ -213,13 +219,13 @@
               {
                 var str = message[i].replace(/-/g,'/');
                 var diff = Math.abs(new Date(datetime) - new Date(str));
-                console.log("times:" + new Date(datetime) + ", " + new Date(str));
+                //console.log("times:" + new Date(datetime) + ", " + new Date(str));
                 diff /= 1000;
                 timeList.push(diff);
-                console.log(diff);
+                //console.log(diff);
               }
               var min = Math.min(...timeList);
-              console.log(min);
+              //console.log(min);
               if(min === Infinity) return "never"
               if(min < 10) return "just now"
               else if(min < 60) return min + " seconds ago"
@@ -230,7 +236,7 @@
               {
                 result /= 60;
                 unit++;
-                console.log(result + ", " + unit);
+                //console.log(result + ", " + unit);
               }
 
               if(result >= 60)
