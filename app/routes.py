@@ -33,49 +33,9 @@ def get_conversations():
 @myapp_obj.route("/")
 def index():
     return render_template("index.html")
-'''
-@myapp_obj.route("/login", methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        valid_user = Users.query.filter_by(username=form.name.data).first()
-        if valid_user != None:
-            if valid_user.check_password(form.password.data) == True:
-                login_user(valid_user)
-                return redirect(url_for("homepage"))
-            else:
-                flash(f"Login failed.")
-        else:
-            flash(f"Login failed.")
-
-    return render_template("login2.html", form=form)
-
-@myapp_obj.route("/logout", methods=["GET", "POST"])
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("login"))    
-'''
-@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
-def reset_password():
-    resetForm = ResetForm()
-    if resetForm.validate_on_submit():
-        valid_user = Users.query.filter_by(username=resetForm.username.data).first()
-        if valid_user:
-            valid_user.set_password(resetForm.password.data)
-            db.session.add(valid_user)
-            db.session.commit()
-            return redirect("/login")
-        else:
-            flash("That user does not exist")
-    return render_template("reset.html", resetForm=resetForm)
-
-
-
 
 @myapp_obj.route("/register", methods=["GET", "POST"])
 def register():
-    
     registerForm = registerUser()
     if registerForm.validate_on_submit():
         same_Username = Users.query.filter_by(
@@ -85,7 +45,7 @@ def register():
             user = Users()
             user.username = registerForm.username.data
             user.set_password(registerForm.password.data)
-
+            #add user to the database
             db.session.add(user)
             db.session.commit()
             return redirect("/login")
@@ -106,16 +66,13 @@ def login():
                 flash(f"Login failed.")
         else:
             flash(f"Login failed.")
-
     return render_template("login2.html", form=form)
 
 @myapp_obj.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
-
-
+    return redirect(url_for("login")) 
 
 @myapp_obj.route("/delete_account", methods=["GET", "POST"])
 @login_required
@@ -134,12 +91,24 @@ def delete_account():
             # Log the user out after deleting the account
             flash("Sorry to see you leaving. :(\n")
             logout_user()
-            
             flash("Your account has been deleted.")
             return redirect(url_for("register"))
 
     return render_template("delete_account.html", user=current_user, deleteForm=deleteForm)
 
+@myapp_obj.route("/resetpassword", methods=["GET", "POST"])
+def reset_password():
+    resetForm = ResetForm()
+    if resetForm.validate_on_submit():
+        valid_user = Users.query.filter_by(username=resetForm.username.data).first()
+        if valid_user:
+            valid_user.set_password(resetForm.password.data)
+            db.session.add(valid_user)
+            db.session.commit()
+            return redirect("/login")
+        else:
+            flash("That user does not exist")
+    return render_template("reset.html", resetForm=resetForm)
 
 @myapp_obj.route("/homepage", methods = ["GET", "POST"])
 @login_required
