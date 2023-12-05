@@ -87,9 +87,9 @@
           <script type="text/javascript">
             var socketio = io.connect("http://127.0.0.1:5000")
 
-            socketio.on('connect', function(message) {
+            socketio.on('connect', function() {
               console.log("CONNECTED")
-              getActivity(message);
+              getActivity();
             })
 
             //var socketio = io();
@@ -100,7 +100,7 @@
 
             socketio.on("message", function (message) {
               createChatItem(message['message'], message['sender_name'], message['timestamp'])
-              updateActivity(message);
+              updateActivity(message['sender_name'],message['timestamp']);
             })
 
             function createChatItem(message, sender, timestamp) {
@@ -140,38 +140,63 @@
       </script>
         <div class = "activity-list">
           <p class = "activity-title user-item"><strong>Activity</strong></p>
-          <ul class = "activity-detail"></ul>
+          <div class = 'activity-detail'>
+            <ul id = "activity"></ul>
+          </div>
+          
         </div>
         <script>
-            function updateActivity(message) {
-              var currentdate = new Date(); 
-              var datetime = currentdate.getFullYear() + "/"
-                + (currentdate.getMonth()+1) + "/"
-                + currentdate.getDate() + " " 
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
-              var str = message['timestamp'].replace(/-/g,'/');
-
-
-
-              console.log(str);
-              console.log(datetime);
-              var diff = Math.abs(new Date(datetime) - new Date(str));
-              console.log(diff/60000);
-              for (var user in message){
-                console.log(message['timestamp']);
-              }
-            }
-            function getActivity(message){//change argument to check each user
-              var activity = document.getElementById("activity-detail");
-              console.log("hello");
-              for(user in message)
+            function updateActivity(sender,time) {
+              var remove = document.getElementsById(sender);
+              while(remove)
               {
-                var user = document.createElement('li');
-                currUser.innerText = message['sender_name'] + "\nLast active:" + checkTime(message['timestamp']);
-                currUser.classList.add('activity-item');
-                onlineList.appendChild(activity);
+                remove.parentNode.removeChild(remove);
+              }
+              var activity = document.getElementById("activity");
+
+              var nameRecord = document.createElement('li');
+              nameRecord.innerText = sender;
+              nameRecord.classList.add('name-record', sender);
+              activity.appendChild(nameRecord);
+
+              var timeRecord = document.createElement('li');
+              timeRecord.innerText = "Last seen: " + checkTime(time);
+              timeRecord.classList.add('time-record', sender);
+              activity.appendChild(timeRecord);
+
+            }
+
+            function getActivity(){//change argument to check each user
+              var activity = document.getElementById("activity");
+              var namesList = "{{participants}}".split(',');
+              var messageList = {{ decrypted_messages|tojson|safe }};
+              
+              //console.log(namesList);
+              for (i in namesList)
+              {
+                var timestamps = [];
+                //console.log(namesList[i]);
+                for(j in messageList)
+                {
+                  //console.log(namesList[i] + " matching with: " + messageList[j].sender_name);
+                  //console.log(namesList[i] == messageList[j].sender_name);
+                  
+                  if(messageList[j].sender_name == namesList[i]) 
+                  {
+                    //console.log(namesList[i] + " sent message at: " + messageList[j].timestamp);
+                    timestamps.push(messageList[j].timestamp);
+                  }
+                }
+                //add name and recent time to list
+                var nameRecord = document.createElement('li');
+                nameRecord.innerText = namesList[i];
+                nameRecord.classList.add('name-record', namesList[i]);
+                activity.appendChild(nameRecord);
+
+                var timeRecord = document.createElement('li');
+                timeRecord.innerText = "Last seen: " + checkTime(timestamps);
+                timeRecord.classList.add('time-record', namesList[i]);
+                activity.appendChild(timeRecord);
               }
             }
             function checkTime(message)
@@ -183,13 +208,58 @@
                 + currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
                 + currentdate.getSeconds();
-              var str = message.replace(/-/g,'/');
-
-              var diff = Math.abs(new Date(datetime) - new Date(str));
-              console.log(diff);
-              for (var user in message){
-                console.log(message['timestamp']);
+              var timeList = [];
+              for (i in message)
+              {
+                var str = message[i].replace(/-/g,'/');
+                var diff = Math.abs(new Date(datetime) - new Date(str));
+                console.log("times:" + new Date(datetime) + ", " + new Date(str));
+                diff /= 1000;
+                timeList.push(diff);
+                console.log(diff);
               }
+              var min = Math.min(...timeList);
+              console.log(min);
+              if(min === Infinity) return "never"
+              if(min < 10) return "just now"
+              else if(min < 60) return min + " seconds ago"
+              
+              var result = min;
+              var unit = 0;
+              while(result >= 60 && unit < 2)
+              {
+                result /= 60;
+                unit++;
+                console.log(result + ", " + unit);
+              }
+
+              if(result >= 60)
+              { 
+                result /= 24;
+                unit++;
+              }
+              var output = " about ";
+              result = Math.floor(result);
+              if(result == 1)
+              {
+                switch(unit)
+                {
+                  case 1: output += result + " minute ago"; break;
+                  case 2: output += result + " hour ago"; break;
+                  default: output += result + " day ago"; break;
+                }
+              }
+              else
+              {
+                switch(unit)
+                {
+                  case 1: output += result + " minutes ago"; break;
+                  case 2: output += result + " hours ago"; break;
+                  default: output += result + " days ago"; break;
+                }
+              }
+              return output;
+              
             }
         </script>
         <!--<div class = "user-list">
