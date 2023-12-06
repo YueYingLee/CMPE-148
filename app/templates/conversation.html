@@ -85,11 +85,11 @@
 
 
           <script type="text/javascript">
-            var socketio = io.connect("http://127.0.0.1:5000")
+            var socketio = io.connect("http://10.250.62.200:5000")
 
             socketio.on('connect', function() {
               console.log("CONNECTED")
-              getActivity();
+              //getActivity();
             })
 
             //var socketio = io();
@@ -169,7 +169,7 @@
             function getActivity(){//change argument to check each user
               var activity = document.getElementById("activity");
               var namesList = "{{participants}}".split(',');
-              var messageList = {{ decrypted_messages|tojson|safe }};
+              var messageList = "{{ decrypted_messages|tojson|safe }}";
               
               //console.log(namesList);
               for (i in namesList)
