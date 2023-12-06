@@ -85,11 +85,11 @@
 
 
           <script type="text/javascript">
-            var socketio = io.connect("http://127.0.0.1:5000")
+            var socketio = io.connect("http://10.0.0.196:5000")
 
             socketio.on('connect', function() {
               console.log("CONNECTED")
-              getActivity();
+             
             })
 
             //var socketio = io();
@@ -100,7 +100,7 @@
 
             socketio.on("message", function (message) {
               createChatItem(message['message'], message['sender_name'], message['timestamp'])
-              //updateActivity(message['sender_name'],message['timestamp']);
+              updateActivity();
             })
 
             function createChatItem(message, sender, timestamp) {
@@ -146,27 +146,18 @@
           
         </div>
         <script>
-            function updateActivity(sender,time) {
-              if(sender != "{{user.username}}")
+            function updateActivity() {
+              //console.log("test");
+
+              var parent = document.getElementById("activity");
+              var child = parent.getElementsByTagName("li");
+              for(var i = child.length-1; i >=0; i--)
               {
-                var remove = document.getElementById(sender);
-                while(remove)
-                {
-                  remove.parentNode.removeChild(remove);
-                }
-                var activity = document.getElementById("activity");
-
-                var nameRecord = document.createElement('li');
-                nameRecord.innerText = sender;
-                nameRecord.classList.add('name-record', sender);
-                activity.appendChild(nameRecord);
-
-                var timeRecord = document.createElement('li');
-                timeRecord.innerText = "Last seen: " + checkTime(time);
-                timeRecord.classList.add('time-record', sender);
-                activity.appendChild(timeRecord);
-                console.log("delete");
+                var node = child[i];
+                console.log(node);
+                node.parentNode.removeChild(node);
               }
+              getActivity();
             }
 
             function getActivity(){//change argument to check each user
@@ -267,6 +258,7 @@
               return output;
               
             }
+            getActivity();
         </script>
         <!--<div class = "user-list">
            <div class = "user-online">
