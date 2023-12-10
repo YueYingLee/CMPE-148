@@ -1,5 +1,5 @@
 # CMPE-148-Computer Networks I
-Final Project for CMPE 148 (Associated with SJSU) by 3C1S
+**Final Project for CMPE 148 (Associated with SJSU) by 3C1S**
 - Yue Ying Lee(@YueYingLee)
 - Justin Yamamoto(@JustinYSJSU)
 - Kenneth Nguyen(@kenneth0810)
