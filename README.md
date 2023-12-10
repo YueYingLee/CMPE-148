@@ -1,6 +1,6 @@
 # CMPE-148-Computer Networks I
 **Final Project for CMPE 148 (Associated with SJSU) by 3C1S**
-- Yue Ying Lee(@YueYingLee)
+- Yue Ying Lee(@YueYingLee)(Team Lead)
 - Justin Yamamoto(@JustinYSJSU)
 - Kenneth Nguyen(@kenneth0810)
 - Brandon Yu(@yubrandon, @brndonyu)
